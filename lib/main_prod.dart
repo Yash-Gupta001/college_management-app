@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_flavors/config_flavors.dart';
-import 'package:flutter_flavors/main.dart';
+import 'package:flutter_flavors/maincommon.dart';
 
 void main(){
   WidgetsFlutterBinding.ensureInitialized();
