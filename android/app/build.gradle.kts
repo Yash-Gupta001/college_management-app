@@ -20,7 +20,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.flutter_flavors"
+        applicationId = "com.example.flutter_flavors"  // Base applicationId
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
@@ -29,34 +29,35 @@ android {
 
     buildTypes {
         debug {
-            // You don't need to specify signingConfig for debug if you are only testing in debug mode
+            // For debug, you don't need to specify signingConfig if you're only testing in debug mode.
         }
         release {
-            // You can remove the signingConfig for release if you're not using it yet.
+            // You can configure signing here later if needed for release.
+            // For now, it's empty because you may not have a release key yet.
         }
     }
 
-    
-
     flavorDimensions("environment")
+    
     productFlavors {
         create("dev") {
             dimension = "environment"
-            applicationIdSuffix = ".dev"
+            applicationIdSuffix = ".dev"  // Adds .dev to the applicationId for this flavor
             versionName = "1.0.0-dev"
-            resValue("string", "app_name", "flutter_dev")
+            resValue("string", "app_name", "flutter_dev")  // App name for dev flavor
         }
         create("uat") {
             dimension = "environment"
-            applicationIdSuffix = ".uat"
+            applicationIdSuffix = ".uat"  // Adds .uat to the applicationId for this flavor
             versionName = "1.0.0-uat"
-            resValue("string", "app_name", "flutter_uat")
+            resValue("string", "app_name", "flutter_uat")  // App name for uat flavor
         }
         create("prod") {
             dimension = "environment"
-            //applicationId = ".prod"
+            // If needed, set the applicationId for prod flavor, or it will default to the base app ID
+            // applicationId = "com.example.flutter_flavors" 
             versionName = "1.0.0-prod"
-            resValue("string", "app_name", "flutter_prod")
+            resValue("string", "app_name", "flutter_prod")  // App name for prod flavor
         }
     }
 }
