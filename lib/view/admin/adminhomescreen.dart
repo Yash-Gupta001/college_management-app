@@ -55,9 +55,9 @@ class AdminHomeScreen extends StatelessWidget {
               controller: subjectController,
               decoration: InputDecoration(
                 labelText: 'Enter Subject Name',
-                labelStyle: TextStyle(color: Colors.deepPurple),
+                labelStyle: TextStyle(color: Color(0xFF4169E1)),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.deepPurple, width: 2.0),
+                  borderSide: BorderSide(color: Color(0xFF4169E1), width: 2.0),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.grey.shade400, width: 2.0),
