@@ -1,4 +1,4 @@
-import 'package:flutter_flavors/controller/studentscreen/studentscreen_controller.dart';
+import 'package:flutter_flavors/controller/student/studentscreen_controller.dart';
 import 'package:get/get.dart';
 
 class StudentScreenBinding extends Bindings {

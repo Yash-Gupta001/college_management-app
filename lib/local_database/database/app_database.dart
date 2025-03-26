@@ -1,14 +1,17 @@
 import 'dart:async';
 import 'package:floor/floor.dart';
+import 'package:flutter_flavors/local_database/dao/eventdao.dart';
 import 'package:flutter_flavors/local_database/dao/facultysubject_dao.dart';
 import 'package:flutter_flavors/local_database/dao/studentsubject_dao.dart';
 import 'package:flutter_flavors/local_database/dao/subjectdao.dart';
 import 'package:flutter_flavors/local_database/entity/admin_entity.dart';
+import 'package:flutter_flavors/local_database/entity/events.dart';
 import 'package:flutter_flavors/local_database/entity/faculty_entity.dart';
 import 'package:flutter_flavors/local_database/entity/facultysubject_entity.dart';
 import 'package:flutter_flavors/local_database/entity/student_entity.dart';
 import 'package:flutter_flavors/local_database/entity/studentsubject_entity.dart';
 import 'package:flutter_flavors/local_database/entity/subject_entity.dart';
+import 'package:flutter_flavors/local_database/type_convertors/date_time_converter.dart';
 import 'package:sqflite/sqflite.dart' as sqflite;
 
 import '../dao/studentdao.dart';
@@ -25,7 +28,8 @@ part 'app_database.g.dart';
     FacultyEntity,
     SubjectEntity,
     StudentSubjectEntity,
-    FacultySubjectEntity
+    FacultySubjectEntity,
+    Event
   ],
   version: 1,
 )
@@ -36,6 +40,7 @@ abstract class AppDatabase extends FloorDatabase {
   StudentSubjectDao get studentSubjectDao;
   FacultySubjectDao get facultySubjectDao;
   AdminDao get admindao;
+  EventDao get eventDao;
 }
 
  

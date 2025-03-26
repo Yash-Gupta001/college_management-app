@@ -84,6 +84,8 @@ class _$AppDatabase extends AppDatabase {
 
   AdminDao? _admindaoInstance;
 
+  EventDao? _eventDaoInstance;
+
   Future<sqflite.Database> open(
     String path,
     List<Migration> migrations, [
@@ -117,6 +119,8 @@ class _$AppDatabase extends AppDatabase {
             'CREATE TABLE IF NOT EXISTS `student_subject_entity` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `studentRollNo` INTEGER NOT NULL, `subjectId` INTEGER NOT NULL, FOREIGN KEY (`studentRollNo`) REFERENCES `student_entity` (`rollNo`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`subjectId`) REFERENCES `subject_entity` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `faculty_subject_entity` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `facultyId` INTEGER NOT NULL, `subjectId` INTEGER NOT NULL, FOREIGN KEY (`facultyId`) REFERENCES `faculty_entity` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`subjectId`) REFERENCES `subject_entity` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION)');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `events` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `title` TEXT NOT NULL, `date` INTEGER NOT NULL, `type` TEXT NOT NULL, `description` TEXT)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -154,6 +158,11 @@ class _$AppDatabase extends AppDatabase {
   @override
   AdminDao get admindao {
     return _admindaoInstance ??= _$AdminDao(database, changeListener);
+  }
+
+  @override
+  EventDao get eventDao {
+    return _eventDaoInstance ??= _$EventDao(database, changeListener);
   }
 }
 
@@ -637,3 +646,115 @@ class _$AdminDao extends AdminDao {
     await _adminEntityDeletionAdapter.delete(admin);
   }
 }
+
+class _$EventDao extends EventDao {
+  _$EventDao(
+    this.database,
+    this.changeListener,
+  )   : _queryAdapter = QueryAdapter(database),
+        _eventInsertionAdapter = InsertionAdapter(
+            database,
+            'events',
+            (Event item) => <String, Object?>{
+                  'id': item.id,
+                  'title': item.title,
+                  'date': _dateTimeConverter.encode(item.date),
+                  'type': item.type,
+                  'description': item.description
+                }),
+        _eventUpdateAdapter = UpdateAdapter(
+            database,
+            'events',
+            ['id'],
+            (Event item) => <String, Object?>{
+                  'id': item.id,
+                  'title': item.title,
+                  'date': _dateTimeConverter.encode(item.date),
+                  'type': item.type,
+                  'description': item.description
+                }),
+        _eventDeletionAdapter = DeletionAdapter(
+            database,
+            'events',
+            ['id'],
+            (Event item) => <String, Object?>{
+                  'id': item.id,
+                  'title': item.title,
+                  'date': _dateTimeConverter.encode(item.date),
+                  'type': item.type,
+                  'description': item.description
+                });
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<Event> _eventInsertionAdapter;
+
+  final UpdateAdapter<Event> _eventUpdateAdapter;
+
+  final DeletionAdapter<Event> _eventDeletionAdapter;
+
+  @override
+  Future<List<Event>> getAllEvents() async {
+    return _queryAdapter.queryList('SELECT * FROM events ORDER BY date ASC',
+        mapper: (Map<String, Object?> row) => Event(
+            id: row['id'] as int?,
+            title: row['title'] as String,
+            date: _dateTimeConverter.decode(row['date'] as int),
+            type: row['type'] as String,
+            description: row['description'] as String?));
+  }
+
+  @override
+  Future<List<Event>> getEventsInRange(
+    DateTime start,
+    DateTime end,
+  ) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM events WHERE date BETWEEN ?1 AND ?2 ORDER BY date ASC',
+        mapper: (Map<String, Object?> row) => Event(
+            id: row['id'] as int?,
+            title: row['title'] as String,
+            date: _dateTimeConverter.decode(row['date'] as int),
+            type: row['type'] as String,
+            description: row['description'] as String?),
+        arguments: [
+          _dateTimeConverter.encode(start),
+          _dateTimeConverter.encode(end)
+        ]);
+  }
+
+  @override
+  Future<List<Event>> getEventsByType(String type) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM events WHERE type = ?1 ORDER BY date ASC',
+        mapper: (Map<String, Object?> row) => Event(
+            id: row['id'] as int?,
+            title: row['title'] as String,
+            date: _dateTimeConverter.decode(row['date'] as int),
+            type: row['type'] as String,
+            description: row['description'] as String?),
+        arguments: [type]);
+  }
+
+  @override
+  Future<void> insertEvent(Event event) async {
+    await _eventInsertionAdapter.insert(event, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> updateEvent(Event event) async {
+    await _eventUpdateAdapter.update(event, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> deleteEvent(Event event) async {
+    await _eventDeletionAdapter.delete(event);
+  }
+}
+
+// ignore_for_file: unused_element
+final _dateTimeConverter = DateTimeConverter();

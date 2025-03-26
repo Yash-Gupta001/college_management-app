@@ -1,4 +1,4 @@
-import 'package:flutter_flavors/controller/facultyscreen/facultyscreen_controller.dart';
+import 'package:flutter_flavors/controller/faculty/facultyscreen_controller.dart';
 import 'package:get/get.dart';
 
 class FacultyScreenBinding extends Bindings {
