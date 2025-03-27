@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_flavors/app/utils/color.dart';
 import 'package:flutter_flavors/controller/faculty/login/facultylogin_controller.dart';
-import 'package:flutter_flavors/controller/faculty/register/facultyregister_binding.dart';
-import 'package:flutter_flavors/view/faculty/faculty_register/faculty-register.dart';
 import 'package:flutter_flavors/widgets/custom_elevated-button.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -70,16 +68,16 @@ class FacultyLogin extends StatelessWidget {
                     ),
                 ),
                 SizedBox(height: 10.0.w,),
-                TextButton(
-                  onPressed: (){
-                    Get.to(
-                        () => FacultyRegister(),
-                        binding: FacultyRegisterBinding(),
-                        transition: Transition.rightToLeft,
-                        duration: const Duration(milliseconds: 300),
-                      );
-                  }, 
-                  child: Text("New teacher"))
+                // TextButton(
+                //   onPressed: (){
+                //     Get.to(
+                //         () => FacultyRegister(),
+                //         binding: FacultyRegisterBinding(),
+                //         transition: Transition.rightToLeft,
+                //         duration: const Duration(milliseconds: 300),
+                //       );
+                //   }, 
+                //   child: Text("New teacher"))
               ],
             ),
           ),

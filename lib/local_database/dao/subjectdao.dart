@@ -6,6 +6,9 @@ abstract class SubjectDao {
   @insert
   Future<void> insertSubject(SubjectEntity subject);
 
+  @delete
+  Future<void> deleteSubject(SubjectEntity subject);
+
   @Query('SELECT * FROM subject_entity')
   Future<List<SubjectEntity>> getAllSubjects();
 

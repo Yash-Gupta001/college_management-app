@@ -400,6 +400,12 @@ class _$SubjectDao extends SubjectDao {
             database,
             'subject_entity',
             (SubjectEntity item) =>
+                <String, Object?>{'id': item.id, 'name': item.name}),
+        _subjectEntityDeletionAdapter = DeletionAdapter(
+            database,
+            'subject_entity',
+            ['id'],
+            (SubjectEntity item) =>
                 <String, Object?>{'id': item.id, 'name': item.name});
 
   final sqflite.DatabaseExecutor database;
@@ -409,6 +415,8 @@ class _$SubjectDao extends SubjectDao {
   final QueryAdapter _queryAdapter;
 
   final InsertionAdapter<SubjectEntity> _subjectEntityInsertionAdapter;
+
+  final DeletionAdapter<SubjectEntity> _subjectEntityDeletionAdapter;
 
   @override
   Future<List<SubjectEntity>> getAllSubjects() async {
@@ -429,6 +437,11 @@ class _$SubjectDao extends SubjectDao {
   Future<void> insertSubject(SubjectEntity subject) async {
     await _subjectEntityInsertionAdapter.insert(
         subject, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> deleteSubject(SubjectEntity subject) async {
+    await _subjectEntityDeletionAdapter.delete(subject);
   }
 }
 

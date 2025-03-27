@@ -18,6 +18,7 @@ dependencies:
   double_back_to_close_app: ^2.1.0
   intl: ^0.20.2
   table_calendar: ^3.2.0
+  flutter_slidable: ^4.0.0
 
 dev_dependencies:
   flutter_test:

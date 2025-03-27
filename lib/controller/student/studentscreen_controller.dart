@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 class StudentScreenController extends GetxController {
   var menuData = RxList<MenuData>([]);
 
+  // list of studentscreen functions
   List<MenuData> getStudentMenu() {
     const List<MenuData> studentMenu = <MenuData>[
       MenuData(title: "Apply Leave", icon: Icons.calendar_today_outlined),
@@ -19,6 +20,6 @@ class StudentScreenController extends GetxController {
   void onInit() {
     super.onInit();
     menuData.value = getStudentMenu();
-    print('Menu items: ${menuData.length}'); // Debug print
+    print('Menu items: ${menuData.length}');
   }
 }

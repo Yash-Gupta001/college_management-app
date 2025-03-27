@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_flavors/app/utils/color.dart';
+import 'package:flutter_flavors/controller/admin/add_faculty/addfaculty_binding.dart';
 import 'package:flutter_flavors/controller/admin/adminscreen_binding.dart';
 import 'package:flutter_flavors/controller/admin/adminscreen_controller.dart';
 import 'package:flutter_flavors/controller/admin/calendar/calendarevent_binding.dart';
+import 'package:flutter_flavors/controller/admin/get_all_subjects/getallsubjects_binding.dart';
 import 'package:flutter_flavors/view/admin/admin_functions/add_subject_screen.dart';
+import 'package:flutter_flavors/view/admin/admin_functions/faculty-register.dart';
 import 'package:flutter_flavors/view/admin/admin_functions/grant_leave.dart';
 import 'package:flutter_flavors/view/admin/admin_functions/pay_slip.dart';
 import 'package:flutter_flavors/view/admin/admin_functions/select_holiday.dart';
@@ -78,9 +81,11 @@ class AdminHomeScreen extends StatelessWidget {
     } else if (menuData.title == "Grant Leave") {
       Get.to(() => GrantLeave(), binding: AdminScreenBinding());
     } else if (menuData.title == "Registered Subjects") {
-      Get.to(() => ShowAllSubjects(), binding: AdminScreenBinding());
+      Get.to(() => ShowAllSubjects(), binding: GetAllSubjectsBinding());
     } else if (menuData.title == "Add Subject") {
-      Get.to(() => AddSubject(), binding: AdminScreenBinding());
+      Get.to(() => AddSubject(), binding: GetAllSubjectsBinding());
+    }else if (menuData.title == "Add Faculty") {
+      Get.to(() => FacultyRegister(), binding: AddfacultyBinding());
     }
   }
 }
