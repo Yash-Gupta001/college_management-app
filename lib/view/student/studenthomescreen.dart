@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_flavors/app/utils/color.dart';
 import 'package:flutter_flavors/common/menu_cell.dart';
 import 'package:flutter_flavors/controller/student/studentscreen_controller.dart';
+import 'package:flutter_flavors/view/student/student_functions/show_attendence.dart';
 import 'package:flutter_flavors/widgets/custom_appbar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -46,8 +47,7 @@ class StudentHomeScreen extends StatelessWidget {
                   itemCount: controller.menuData.length,
                   itemBuilder: (context, index) {
                     return GestureDetector(
-                      onTap: () {}, 
-                      //navigateToPage(controller, index),
+                      onTap: () => navigateToPage(controller, index),
                       child: MenuCell(
                         choice: controller.menuData[index],
                         iconColor: AppColors.student_primary,),
@@ -62,18 +62,16 @@ class StudentHomeScreen extends StatelessWidget {
     );
   }
 
-  // void navigateToPage(AdminScreenController controller, int index) {
-  //   var menuData = controller.menuData[index];
-  //   if (menuData.title == "Pay Slip") {
-  //     Get.to(() => PaySlip(), binding: AdminScreenBinding());
-  //   } else if (menuData.title == "Select Holiday") {
-  //     Get.to(() => SelectHoliday(), binding: CalendarEventBinding());
-  //   } else if (menuData.title == "Grant Leave") {
-  //     Get.to(() => GrantLeave(), binding: AdminScreenBinding());
-  //   } else if (menuData.title == "Registered Subjects") {
-  //     Get.to(() => ShowAllSubjects(), binding: AdminScreenBinding());
-  //   } else if (menuData.title == "Add Subject") {
-  //     Get.to(() => AddSubject(), binding: AdminScreenBinding());
-  //   }
-  // }
+  void navigateToPage(StudentScreenController controller, int index) {
+    var menuData = controller.menuData[index];
+    if (menuData.title == "Apply Leave") {
+      // Get.to(() => PaySlip(), binding: AdminScreenBinding());
+    } else if (menuData.title == "Show Attendance") {
+      Get.to(ShowAttendence());
+    } else if (menuData.title == "Fees") {
+      // Get.to(() => GrantLeave(), binding: AdminScreenBinding());
+    } else if (menuData.title == "Show Holidays") {
+      // Get.to(() => ShowAllSubjects(), binding: AdminScreenBinding());
+    }
+  }
 }

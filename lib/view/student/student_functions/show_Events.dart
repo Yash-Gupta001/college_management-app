@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_flavors/app/utils/color.dart';
 import 'package:flutter_flavors/widgets/custom_appbar.dart';
 
-class ShowAttendence extends StatelessWidget {
-  const ShowAttendence({super.key});
+class ShowFees extends StatelessWidget {
+  const ShowFees({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       appBar: CustomAppBar(
-        title: 'Show Attendance',
+        title: 'Show Events',
         titleColor: AppColors.white,
         backgroundColor: AppColors.student_primary,
         automaticallyImplyLeading: true,
