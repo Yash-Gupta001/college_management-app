@@ -26,7 +26,6 @@ class AddSubject extends StatelessWidget {
 
         // Clear the text field and show a confirmation snackbar
         subjectController.clear();
-        Get.snackbar('Success', 'Subject added successfully!');
       } else {
         Get.snackbar('Error', 'Please enter a valid subject name.');
       }
@@ -47,13 +46,8 @@ class AddSubject extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const SizedBox(height: 20),
-            // const Text(
-            //   "Add a New Subject",
-            //   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            // ),
-            const SizedBox(height: 30),
-            // Input field for subject name with improved styling
+            const SizedBox(height: 40),
+            // Input field for subject name 
             TextField(
               controller: subjectController,
               decoration: InputDecoration(

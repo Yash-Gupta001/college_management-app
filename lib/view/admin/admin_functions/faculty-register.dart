@@ -5,22 +5,144 @@ import 'package:flutter_flavors/widgets/custom_appbar.dart';
 import 'package:get/get.dart';
 
 class FacultyRegister extends StatelessWidget {
-  const FacultyRegister ({super.key});
+  const FacultyRegister({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<AddFacultyController>();
-    return const Scaffold(
+    final controller = Get.put(AddFacultyController());
+    return Scaffold(
       appBar: CustomAppBar(
         title: 'Add Faculty',
         titleColor: AppColors.white,
         backgroundColor: AppColors.admin_primary,
         centerTitle: true,
         automaticallyImplyLeading: true,
-        ),
-      
-      body: Column(
-        
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(20),
+        child: Obx(() => Column(
+          children: [
+            // Name Field
+            TextFormField(
+              decoration: InputDecoration(
+                labelText: 'First Name',
+                errorText: controller.nameError.value,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              onChanged: controller.name,
+            ),
+            const SizedBox(height: 15),
+            
+            // Last Name Field
+            TextFormField(
+              decoration: InputDecoration(
+                labelText: 'Last Name',
+                errorText: controller.lastnameError.value,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              onChanged: controller.lastname,
+            ),
+            const SizedBox(height: 15),
+            
+            // Username Field
+            TextFormField(
+              decoration: InputDecoration(
+                labelText: 'Username',
+                errorText: controller.usernameError.value,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              onChanged: controller.username,
+            ),
+            const SizedBox(height: 15),
+            
+            // Password Field
+            TextFormField(
+              obscureText: true,
+              decoration: InputDecoration(
+                labelText: 'Password',
+                errorText: controller.passwordError.value,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              onChanged: controller.password,
+            ),
+            const SizedBox(height: 15),
+            
+            // Email Field
+            TextFormField(
+              keyboardType: TextInputType.emailAddress,
+              decoration: InputDecoration(
+                labelText: 'Email',
+                errorText: controller.emailError.value,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              onChanged: controller.email,
+            ),
+            const SizedBox(height: 15),
+            
+            // Salary Field
+            TextFormField(
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                labelText: 'Salary',
+                errorText: controller.salaryError.value,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              onChanged: (value) {
+                controller.salary.value = double.tryParse(value) ?? 0.0;
+              },
+            ),
+            const SizedBox(height: 15),
+            
+            // Contact Number Field
+            TextFormField(
+              keyboardType: TextInputType.phone,
+              decoration: InputDecoration(
+                labelText: 'Contact Number',
+                errorText: controller.contactNoError.value,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              onChanged: controller.contactNo,
+            ),
+            const SizedBox(height: 30),
+            
+            // Submit Button
+            SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.admin_primary,
+                padding: const EdgeInsets.symmetric(vertical: 15),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              onPressed: controller.isLoading.value ? null : controller.submitForm,
+              child: const Text(
+                'Register Faculty',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+                ),
+            ),
+          ],
+        )),
       ),
     );
   }

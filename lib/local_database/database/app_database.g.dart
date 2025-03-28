@@ -112,7 +112,7 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `student_entity` (`rollNo` INTEGER PRIMARY KEY AUTOINCREMENT, `username` TEXT NOT NULL, `password` TEXT NOT NULL, `name` TEXT NOT NULL, `email` TEXT NOT NULL)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `faculty_entity` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `username` TEXT NOT NULL, `password` TEXT NOT NULL, `name` TEXT NOT NULL, `department` TEXT NOT NULL, `email` TEXT NOT NULL)');
+            'CREATE TABLE IF NOT EXISTS `faculty_entity` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `lastname` TEXT NOT NULL, `username` TEXT NOT NULL, `password` TEXT NOT NULL, `email` TEXT NOT NULL, `salary` REAL NOT NULL, `contactNo` TEXT NOT NULL)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `subject_entity` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL)');
         await database.execute(
@@ -288,11 +288,13 @@ class _$FacultyDao extends FacultyDao {
             'faculty_entity',
             (FacultyEntity item) => <String, Object?>{
                   'id': item.id,
+                  'name': item.name,
+                  'lastname': item.lastname,
                   'username': item.username,
                   'password': item.password,
-                  'name': item.name,
-                  'department': item.department,
-                  'email': item.email
+                  'email': item.email,
+                  'salary': item.salary,
+                  'contactNo': item.contactNo
                 }),
         _facultyEntityUpdateAdapter = UpdateAdapter(
             database,
@@ -300,11 +302,13 @@ class _$FacultyDao extends FacultyDao {
             ['id'],
             (FacultyEntity item) => <String, Object?>{
                   'id': item.id,
+                  'name': item.name,
+                  'lastname': item.lastname,
                   'username': item.username,
                   'password': item.password,
-                  'name': item.name,
-                  'department': item.department,
-                  'email': item.email
+                  'email': item.email,
+                  'salary': item.salary,
+                  'contactNo': item.contactNo
                 }),
         _facultyEntityDeletionAdapter = DeletionAdapter(
             database,
@@ -312,11 +316,13 @@ class _$FacultyDao extends FacultyDao {
             ['id'],
             (FacultyEntity item) => <String, Object?>{
                   'id': item.id,
+                  'name': item.name,
+                  'lastname': item.lastname,
                   'username': item.username,
                   'password': item.password,
-                  'name': item.name,
-                  'department': item.department,
-                  'email': item.email
+                  'email': item.email,
+                  'salary': item.salary,
+                  'contactNo': item.contactNo
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -336,11 +342,13 @@ class _$FacultyDao extends FacultyDao {
     return _queryAdapter.queryList('SELECT * FROM faculty_entity',
         mapper: (Map<String, Object?> row) => FacultyEntity(
             id: row['id'] as int?,
+            lastname: row['lastname'] as String,
+            salary: row['salary'] as double,
             username: row['username'] as String,
             password: row['password'] as String,
             name: row['name'] as String,
-            department: row['department'] as String,
-            email: row['email'] as String));
+            email: row['email'] as String,
+            contactNo: row['contactNo'] as String));
   }
 
   @override
@@ -352,11 +360,13 @@ class _$FacultyDao extends FacultyDao {
         'SELECT * FROM faculty_entity WHERE username = ?1 AND password = ?2',
         mapper: (Map<String, Object?> row) => FacultyEntity(
             id: row['id'] as int?,
+            lastname: row['lastname'] as String,
+            salary: row['salary'] as double,
             username: row['username'] as String,
             password: row['password'] as String,
             name: row['name'] as String,
-            department: row['department'] as String,
-            email: row['email'] as String),
+            email: row['email'] as String,
+            contactNo: row['contactNo'] as String),
         arguments: [username, password]);
   }
 
@@ -366,11 +376,13 @@ class _$FacultyDao extends FacultyDao {
         'SELECT * FROM faculty_entity WHERE username = ?1',
         mapper: (Map<String, Object?> row) => FacultyEntity(
             id: row['id'] as int?,
+            lastname: row['lastname'] as String,
+            salary: row['salary'] as double,
             username: row['username'] as String,
             password: row['password'] as String,
             name: row['name'] as String,
-            department: row['department'] as String,
-            email: row['email'] as String),
+            email: row['email'] as String,
+            contactNo: row['contactNo'] as String),
         arguments: [username]);
   }
 
@@ -401,6 +413,12 @@ class _$SubjectDao extends SubjectDao {
             'subject_entity',
             (SubjectEntity item) =>
                 <String, Object?>{'id': item.id, 'name': item.name}),
+        _subjectEntityUpdateAdapter = UpdateAdapter(
+            database,
+            'subject_entity',
+            ['id'],
+            (SubjectEntity item) =>
+                <String, Object?>{'id': item.id, 'name': item.name}),
         _subjectEntityDeletionAdapter = DeletionAdapter(
             database,
             'subject_entity',
@@ -415,6 +433,8 @@ class _$SubjectDao extends SubjectDao {
   final QueryAdapter _queryAdapter;
 
   final InsertionAdapter<SubjectEntity> _subjectEntityInsertionAdapter;
+
+  final UpdateAdapter<SubjectEntity> _subjectEntityUpdateAdapter;
 
   final DeletionAdapter<SubjectEntity> _subjectEntityDeletionAdapter;
 
@@ -437,6 +457,11 @@ class _$SubjectDao extends SubjectDao {
   Future<void> insertSubject(SubjectEntity subject) async {
     await _subjectEntityInsertionAdapter.insert(
         subject, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> updateSubject(SubjectEntity subject) async {
+    await _subjectEntityUpdateAdapter.update(subject, OnConflictStrategy.abort);
   }
 
   @override
@@ -538,7 +563,7 @@ class _$FacultySubjectDao extends FacultySubjectDao {
   Future<List<FacultyEntity>> getFacultyForSubject(int subjectId) async {
     return _queryAdapter.queryList(
         'SELECT * FROM faculty_entity f INNER JOIN faculty_subject_entity fs ON f.id = fs.facultyId WHERE fs.subjectId = ?1',
-        mapper: (Map<String, Object?> row) => FacultyEntity(id: row['id'] as int?, username: row['username'] as String, password: row['password'] as String, name: row['name'] as String, department: row['department'] as String, email: row['email'] as String),
+        mapper: (Map<String, Object?> row) => FacultyEntity(id: row['id'] as int?, lastname: row['lastname'] as String, salary: row['salary'] as double, username: row['username'] as String, password: row['password'] as String, name: row['name'] as String, email: row['email'] as String, contactNo: row['contactNo'] as String),
         arguments: [subjectId]);
   }
 

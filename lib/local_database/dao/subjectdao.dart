@@ -9,9 +9,13 @@ abstract class SubjectDao {
   @delete
   Future<void> deleteSubject(SubjectEntity subject);
 
+  @update
+  Future<void> updateSubject(SubjectEntity subject);
+
   @Query('SELECT * FROM subject_entity')
   Future<List<SubjectEntity>> getAllSubjects();
 
   @Query('SELECT * FROM subject_entity WHERE id = :id')
   Future<SubjectEntity?> getSubjectById(int id);
 }
+

@@ -4,12 +4,16 @@ import 'package:flutter_flavors/controller/admin/add_faculty/addfaculty_binding.
 import 'package:flutter_flavors/controller/admin/adminscreen_binding.dart';
 import 'package:flutter_flavors/controller/admin/adminscreen_controller.dart';
 import 'package:flutter_flavors/controller/admin/calendar/calendarevent_binding.dart';
+import 'package:flutter_flavors/controller/admin/get_all_faculty/getallfaculty_binding.dart';
+import 'package:flutter_flavors/controller/admin/get_all_students/getallstudents_binding.dart';
 import 'package:flutter_flavors/controller/admin/get_all_subjects/getallsubjects_binding.dart';
 import 'package:flutter_flavors/view/admin/admin_functions/add_subject_screen.dart';
 import 'package:flutter_flavors/view/admin/admin_functions/faculty-register.dart';
 import 'package:flutter_flavors/view/admin/admin_functions/grant_leave.dart';
 import 'package:flutter_flavors/view/admin/admin_functions/pay_slip.dart';
 import 'package:flutter_flavors/view/admin/admin_functions/select_holiday.dart';
+import 'package:flutter_flavors/view/admin/admin_functions/show_all_faculty.dart';
+import 'package:flutter_flavors/view/admin/admin_functions/show_all_students.dart';
 import 'package:flutter_flavors/view/admin/admin_functions/show_all_subjects.dart';
 import 'package:flutter_flavors/common/menu_cell.dart';
 import 'package:flutter_flavors/widgets/custom_appbar.dart';
@@ -85,7 +89,11 @@ class AdminHomeScreen extends StatelessWidget {
     } else if (menuData.title == "Add Subject") {
       Get.to(() => AddSubject(), binding: GetAllSubjectsBinding());
     }else if (menuData.title == "Add Faculty") {
-      Get.to(() => FacultyRegister(), binding: AddfacultyBinding());
+      Get.to(() => FacultyRegister(),binding: AddfacultyBinding());
+    }else if (menuData.title == "Show All Faculty") {
+     Get.to(() => ShowAllFaculty(),binding: GetAllFacultyBinding());
+    }else if (menuData.title == "Show All Students") {
+     Get.to(() => ShowAllStudents(),binding: GetAllStudentsBinding());
     }
   }
 }

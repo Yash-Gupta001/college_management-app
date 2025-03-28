@@ -47,7 +47,9 @@ class ShowAllSubjects extends StatelessWidget {
                   children: [
                     // Edit action
                     SlidableAction(
-                      onPressed: (context) => () {},
+                      onPressed: (context) {
+                        controller.editSubject(subject);
+                      },
                       backgroundColor: AppColors.green,
                       foregroundColor: AppColors.white,
                       icon: Icons.edit,
