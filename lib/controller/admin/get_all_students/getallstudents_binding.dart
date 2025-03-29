@@ -1,5 +1,5 @@
 import 'package:flutter_flavors/controller/admin/get_all_students/getallstudents_controller.dart';
-import 'package:flutter_flavors/local_database/database/app_database.dart';
+import 'package:flutter_flavors/core/local_database/database/app_database.dart';
 import 'package:get/get.dart';
 
 class GetAllStudentsBinding extends Bindings {

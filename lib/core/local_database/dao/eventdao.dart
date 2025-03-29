@@ -1,5 +1,5 @@
 import 'package:floor/floor.dart';
-import 'package:flutter_flavors/local_database/entity/events.dart';
+import 'package:flutter_flavors/core/local_database/entity/events.dart';
 
 @dao
 abstract class EventDao {

@@ -1,5 +1,5 @@
 import 'package:floor/floor.dart';
-import 'package:flutter_flavors/local_database/type_convertors/date_time_converter.dart';
+import 'package:flutter_flavors/core/local_database/type_convertors/date_time_converter.dart';
 
 @Entity(tableName: 'events')
 class Event {

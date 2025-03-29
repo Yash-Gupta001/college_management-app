@@ -76,6 +76,14 @@ class ShowAllFaculty extends StatelessWidget {
                         children: [
                           Icon(Icons.phone, size: 16, color: AppColors.blue),
                           SizedBox(width: 4),
+                          Text(teacher.subject),
+                        ],
+                      ),
+                      SizedBox(height: 4),
+                      Row(
+                        children: [
+                          Icon(Icons.phone, size: 16, color: AppColors.blue),
+                          SizedBox(width: 4),
                           Text(teacher.contactNo),
                         ],
                       ),

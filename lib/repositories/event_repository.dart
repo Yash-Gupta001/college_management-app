@@ -1,6 +1,6 @@
 
-import 'package:flutter_flavors/local_database/database/app_database.dart';
-import 'package:flutter_flavors/local_database/entity/events.dart';
+import 'package:flutter_flavors/core/local_database/database/app_database.dart';
+import 'package:flutter_flavors/core/local_database/entity/events.dart';
 
 class EventRepository {
   final AppDatabase _database;

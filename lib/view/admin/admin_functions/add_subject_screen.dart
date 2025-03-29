@@ -4,7 +4,7 @@ import 'package:flutter_flavors/controller/admin/get_all_subjects/getallsubjects
 import 'package:flutter_flavors/widgets/custom_appbar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:flutter_flavors/local_database/entity/subject_entity.dart';
+import 'package:flutter_flavors/core/local_database/entity/subject_entity.dart';
 
 class AddSubject extends StatelessWidget {
   const AddSubject({Key? key}) : super(key: key);
@@ -52,12 +52,12 @@ class AddSubject extends StatelessWidget {
               controller: subjectController,
               decoration: InputDecoration(
                 labelText: 'Enter Subject Name',
-                labelStyle: TextStyle(color: Color(0xFF4169E1)),
+                labelStyle: TextStyle(color: AppColors.admin_primary),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFF4169E1), width: 2.0),
+                  borderSide: BorderSide(color: AppColors.admin_primary, width: 2.0),
                 ),
                 enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white, width: 2.0),
+                  borderSide: BorderSide(color: AppColors.admin_primary, width: 2.0),
                 ),
                 contentPadding: EdgeInsets.symmetric(vertical: 15.h, horizontal: 10.w),
               ),
@@ -69,8 +69,8 @@ class AddSubject extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: addSubject,
                 style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: Color(0xFF4169E1),
+                  foregroundColor: AppColors.white,
+                  backgroundColor: AppColors.admin_primary,
                   padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 32.w),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.0),

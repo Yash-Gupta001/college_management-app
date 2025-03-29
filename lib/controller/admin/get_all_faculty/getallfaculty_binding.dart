@@ -1,6 +1,7 @@
 import 'package:flutter_flavors/controller/admin/get_all_faculty/getallfaculty_controller.dart';
-import 'package:flutter_flavors/local_database/dao/facultydao.dart';
-import 'package:flutter_flavors/local_database/database/app_database.dart';
+import 'package:flutter_flavors/controller/admin/get_all_subjects/getallsubjects_controller.dart';
+import 'package:flutter_flavors/core/local_database/dao/facultydao.dart';
+import 'package:flutter_flavors/core/local_database/database/app_database.dart';
 import 'package:get/get.dart';
 
 class GetAllFacultyBinding extends Bindings {
@@ -16,5 +17,8 @@ class GetAllFacultyBinding extends Bindings {
     Get.lazyPut<GetallFacultyController>(
       () => GetallFacultyController(Get.find<FacultyDao>()),
     );
+
+    // Lazy load AdminScreenController and pass SubjectDao as a dependency
+    Get.lazyPut<GetAllSubjectsController>(() => GetAllSubjectsController(database.subjectDao));
   }
 }

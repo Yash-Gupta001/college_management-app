@@ -79,7 +79,7 @@ class AdminHomeScreen extends StatelessWidget {
   void navigateToPage(AdminScreenController controller, int index) {
     var menuData = controller.menuData[index];
     if (menuData.title == "Pay Slip") {
-      Get.to(() => PaySlip(), binding: AdminScreenBinding());
+      Get.to(() => PaySlip(), binding: GetAllFacultyBinding());
     } else if (menuData.title == "Select Holiday") {
       Get.to(() => SelectHoliday(), binding: CalendarEventBinding());
     } else if (menuData.title == "Grant Leave") {

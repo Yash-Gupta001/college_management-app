@@ -1,7 +1,6 @@
-import 'package:flutter_flavors/local_database/dao/facultydao.dart';
-import 'package:flutter_flavors/local_database/entity/faculty_entity.dart';
+import 'package:flutter_flavors/core/local_database/dao/facultydao.dart';
+import 'package:flutter_flavors/core/local_database/entity/faculty_entity.dart';
 import 'package:get/get.dart';
-import 'package:floor/floor.dart';
 
 class AddFacultyController extends GetxController {
   final FacultyDao facultyDao = Get.find(); // Get the DAO instance
@@ -14,6 +13,7 @@ class AddFacultyController extends GetxController {
   var email = ''.obs;
   var salary = 0.0.obs;
   var contactNo = ''.obs;
+  var subject = ''.obs;
   
   // Validation observables
   var nameError = Rx<String?>(null);
@@ -23,6 +23,7 @@ class AddFacultyController extends GetxController {
   var emailError = Rx<String?>(null);
   var salaryError = Rx<String?>(null);
   var contactNoError = Rx<String?>(null);
+  var subjectError = Rx<String?>(null);
 
   // Loading state
   var isLoading = false.obs;
@@ -36,6 +37,7 @@ class AddFacultyController extends GetxController {
     email.value = '';
     salary.value = 0.0;
     contactNo.value = '';
+    subject.value = '';
     clearErrors();
   }
 
@@ -48,7 +50,8 @@ class AddFacultyController extends GetxController {
     emailError.value = null;
     salaryError.value = null;
     contactNoError.value = null;
-  }
+    subjectError.value = null;
+    }
 
   // Validate all fields
   bool validateFields() {
@@ -102,6 +105,11 @@ class AddFacultyController extends GetxController {
       contactNoError.value = 'Enter a valid phone number';
       isValid = false;
     }
+
+    if (subject.value.isEmpty) {
+      subjectError.value = 'Subject is required';
+      isValid = false;
+    }
     
     return isValid;
   }
@@ -115,7 +123,8 @@ class AddFacultyController extends GetxController {
       password: password.value,
       email: email.value,
       salary: salary.value,
-      contactNo: contactNo.value,
+      contactNo: contactNo.value, 
+      subject: subject.value,
     );
   }
 
@@ -141,6 +150,7 @@ class AddFacultyController extends GetxController {
         Get.snackbar('Error', 'Failed to add faculty: ${e.toString()}');
       } finally {
         isLoading(false);
+        clearFields();
       }
     } else {
       Get.snackbar('Error', 'Please fix the errors in the form');

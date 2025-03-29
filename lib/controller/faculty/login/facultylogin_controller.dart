@@ -1,5 +1,5 @@
 import 'package:flutter_flavors/controller/faculty/facultyscreen_binding.dart';
-import 'package:flutter_flavors/local_database/dao/facultydao.dart';
+import 'package:flutter_flavors/core/local_database/dao/facultydao.dart';
 import 'package:flutter_flavors/view/faculty/facultyhomescreen.dart';
 import 'package:get/get.dart';
 

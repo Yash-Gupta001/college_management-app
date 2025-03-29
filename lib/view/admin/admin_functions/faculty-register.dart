@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_flavors/app/utils/color.dart';
 import 'package:flutter_flavors/controller/admin/add_faculty/addfaculty_controller.dart';
+import 'package:flutter_flavors/controller/admin/get_all_subjects/getallsubjects_controller.dart';
+import 'package:flutter_flavors/core/local_database/dao/subjectdao.dart';
 import 'package:flutter_flavors/widgets/custom_appbar.dart';
 import 'package:get/get.dart';
 
 class FacultyRegister extends StatelessWidget {
   const FacultyRegister({super.key});
 
+
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(AddFacultyController());
+    final controller = Get.find<AddFacultyController>();
+    final subjectcontroller = Get.find<GetAllSubjectsController>();
+    // final subjectcontroller = Get.find<GetAllSubjectsController>();
+
     return Scaffold(
       appBar: CustomAppBar(
         title: 'Add Faculty',
@@ -104,7 +110,21 @@ class FacultyRegister extends StatelessWidget {
               },
             ),
             const SizedBox(height: 15),
-            
+
+            // Assign subject to faculty
+            TextFormField(
+              decoration: InputDecoration(
+                labelText: 'Subject',
+                errorText: controller.subjectError.value,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              // onChanged: subjectcontroller.subjects.,
+            ),
+
+
+            const SizedBox(height: 15),            
             // Contact Number Field
             TextFormField(
               keyboardType: TextInputType.phone,

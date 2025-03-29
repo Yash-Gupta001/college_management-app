@@ -1,5 +1,5 @@
-import 'package:flutter_flavors/local_database/dao/subjectdao.dart';
-import 'package:flutter_flavors/local_database/entity/subject_entity.dart';
+import 'package:flutter_flavors/core/local_database/dao/subjectdao.dart';
+import 'package:flutter_flavors/core/local_database/entity/subject_entity.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 

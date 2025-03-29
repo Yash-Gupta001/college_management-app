@@ -12,6 +12,7 @@ class FacultyEntity {
   final String email;
   final double salary;
   final String contactNo;
+  final String subject;
 
 
   FacultyEntity({
@@ -22,6 +23,7 @@ class FacultyEntity {
     required this.password,
     required this.name,
     required this.email,
-    required this.contactNo, 
+    required this.contactNo,
+    required this.subject,
   });
 }

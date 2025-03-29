@@ -112,7 +112,7 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `student_entity` (`rollNo` INTEGER PRIMARY KEY AUTOINCREMENT, `username` TEXT NOT NULL, `password` TEXT NOT NULL, `name` TEXT NOT NULL, `email` TEXT NOT NULL)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `faculty_entity` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `lastname` TEXT NOT NULL, `username` TEXT NOT NULL, `password` TEXT NOT NULL, `email` TEXT NOT NULL, `salary` REAL NOT NULL, `contactNo` TEXT NOT NULL)');
+            'CREATE TABLE IF NOT EXISTS `faculty_entity` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `lastname` TEXT NOT NULL, `username` TEXT NOT NULL, `password` TEXT NOT NULL, `email` TEXT NOT NULL, `salary` REAL NOT NULL, `contactNo` TEXT NOT NULL, `subject` TEXT NOT NULL)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `subject_entity` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL)');
         await database.execute(
@@ -294,7 +294,8 @@ class _$FacultyDao extends FacultyDao {
                   'password': item.password,
                   'email': item.email,
                   'salary': item.salary,
-                  'contactNo': item.contactNo
+                  'contactNo': item.contactNo,
+                  'subject': item.subject
                 }),
         _facultyEntityUpdateAdapter = UpdateAdapter(
             database,
@@ -308,7 +309,8 @@ class _$FacultyDao extends FacultyDao {
                   'password': item.password,
                   'email': item.email,
                   'salary': item.salary,
-                  'contactNo': item.contactNo
+                  'contactNo': item.contactNo,
+                  'subject': item.subject
                 }),
         _facultyEntityDeletionAdapter = DeletionAdapter(
             database,
@@ -322,7 +324,8 @@ class _$FacultyDao extends FacultyDao {
                   'password': item.password,
                   'email': item.email,
                   'salary': item.salary,
-                  'contactNo': item.contactNo
+                  'contactNo': item.contactNo,
+                  'subject': item.subject
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -348,7 +351,8 @@ class _$FacultyDao extends FacultyDao {
             password: row['password'] as String,
             name: row['name'] as String,
             email: row['email'] as String,
-            contactNo: row['contactNo'] as String));
+            contactNo: row['contactNo'] as String,
+            subject: row['subject'] as String));
   }
 
   @override
@@ -366,7 +370,8 @@ class _$FacultyDao extends FacultyDao {
             password: row['password'] as String,
             name: row['name'] as String,
             email: row['email'] as String,
-            contactNo: row['contactNo'] as String),
+            contactNo: row['contactNo'] as String,
+            subject: row['subject'] as String),
         arguments: [username, password]);
   }
 
@@ -382,7 +387,8 @@ class _$FacultyDao extends FacultyDao {
             password: row['password'] as String,
             name: row['name'] as String,
             email: row['email'] as String,
-            contactNo: row['contactNo'] as String),
+            contactNo: row['contactNo'] as String,
+            subject: row['subject'] as String),
         arguments: [username]);
   }
 
@@ -563,7 +569,7 @@ class _$FacultySubjectDao extends FacultySubjectDao {
   Future<List<FacultyEntity>> getFacultyForSubject(int subjectId) async {
     return _queryAdapter.queryList(
         'SELECT * FROM faculty_entity f INNER JOIN faculty_subject_entity fs ON f.id = fs.facultyId WHERE fs.subjectId = ?1',
-        mapper: (Map<String, Object?> row) => FacultyEntity(id: row['id'] as int?, lastname: row['lastname'] as String, salary: row['salary'] as double, username: row['username'] as String, password: row['password'] as String, name: row['name'] as String, email: row['email'] as String, contactNo: row['contactNo'] as String),
+        mapper: (Map<String, Object?> row) => FacultyEntity(id: row['id'] as int?, lastname: row['lastname'] as String, salary: row['salary'] as double, username: row['username'] as String, password: row['password'] as String, name: row['name'] as String, email: row['email'] as String, contactNo: row['contactNo'] as String, subject: row['subject'] as String),
         arguments: [subjectId]);
   }
 

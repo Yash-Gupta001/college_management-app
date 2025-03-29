@@ -1,6 +1,6 @@
 import 'package:floor/floor.dart';
-import 'package:flutter_flavors/local_database/entity/faculty_entity.dart';
-import 'package:flutter_flavors/local_database/entity/facultysubject_entity.dart';
+import 'package:flutter_flavors/core/local_database/entity/faculty_entity.dart';
+import 'package:flutter_flavors/core/local_database/entity/facultysubject_entity.dart';
 
 
 @dao
