@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_flavors/app/utils/color.dart';
 import 'package:flutter_flavors/controller/admin/get_all_students/getallstudents_controller.dart';
 import 'package:flutter_flavors/widgets/custom_appbar.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ShowAllStudents extends StatelessWidget {
   const ShowAllStudents({super.key});
@@ -22,13 +24,105 @@ class ShowAllStudents extends StatelessWidget {
 
       body: Obx(() {
         if (controller.students.isEmpty) {
-          return const Center(child: Text("No student Registered."));
+          return const Center(child: Text("No Teacher Registered."));
         }
         return ListView.builder(
           itemCount: controller.students.length,
           itemBuilder: (context, index) {
-            return ListTile(
-              title: Text(controller.students[index].name),
+            final students = controller.students[index];
+            return Slidable(
+              endActionPane: ActionPane(
+                motion: const DrawerMotion(),
+                extentRatio: 0.25,
+                children: [
+                  // Delete button
+                  SlidableAction(
+                    onPressed: (context) async {
+                      await controller.studentDao.deleteStudent(students);
+                      controller.students.remove(students);
+                    },
+                    backgroundColor: AppColors.red,
+                    foregroundColor: AppColors.white,
+                    icon: Icons.delete,
+                    label: 'Delete',
+                  ),
+                  // Edit button
+                  SlidableAction(
+                    onPressed: (context) {
+                      // Add edit functionality if needed
+                    },
+                    backgroundColor: AppColors.green,
+                    foregroundColor: AppColors.white,
+                    icon: Icons.edit,
+                    label: 'Edit',
+                  ),
+                ],
+              ),
+              child: Card(
+                margin: const EdgeInsets.symmetric(
+                  vertical: 8.0,
+                  horizontal: 16.0,
+                ),
+                child: ListTile(
+                  title: Text(
+                    "${students.name}",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 4),
+                      // Row(
+                      //   children: [
+                      //     Icon(Icons.menu_book_sharp, size: 16, color: AppColors.green),
+                      //     SizedBox(width: 4),
+                      //     Text(teacher.subject),
+                      //   ],
+                      // ),
+                      SizedBox(height: 4),
+                      Row(
+                        children: [
+                          Icon(Icons.phone, size: 16, color: AppColors.blue),
+                          SizedBox(width: 4),
+                          Text(students.contactNo),
+                        ],
+                      ),
+                      SizedBox(height: 4),
+                      Row(
+                        children: [
+                          Icon(Icons.email, size: 16, color: AppColors.red),
+                          SizedBox(width: 4),
+                          Flexible(
+                            child: Text(
+                              students.email,
+                              overflow: TextOverflow.visible,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.phone, color: AppColors.blue),
+                        onPressed: () {
+                          String phoneUrl = "tel:${students.contactNo}";
+                          launchUrl(Uri.parse(phoneUrl));
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.email, color: AppColors.red),
+                        onPressed: () {
+                          String emailUrl = "mailto:${students.email}";
+                          launchUrl(Uri.parse(emailUrl));
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             );
           },
         );

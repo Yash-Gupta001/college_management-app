@@ -9,6 +9,8 @@ class StudentEntity {
   final String password;
   final String name;
   final String email;
+  final String contactNo;
+  final int fees;
 
   StudentEntity({
     this.rollNo,
@@ -16,5 +18,7 @@ class StudentEntity {
     required this.password,
     required this.name,
     required this.email,
+    required this.contactNo,
+    this.fees = 25000, 
   });
 }

@@ -1,4 +1,5 @@
 import 'package:flutter_flavors/controller/admin/get_all_students/getallstudents_controller.dart';
+import 'package:flutter_flavors/core/local_database/dao/studentdao.dart';
 import 'package:flutter_flavors/core/local_database/database/app_database.dart';
 import 'package:get/get.dart';
 
@@ -8,7 +9,15 @@ class GetAllStudentsBinding extends Bindings {
     // Access the database instance and provide the SubjectDao
     final database = Get.find<AppDatabase>();
 
+    // Register FacultyDao first
+    Get.lazyPut<StudentDao>(() => database.studentDao);
+
     // Lazy load GetallStudentsController and pass studentDao as a dependency
     Get.lazyPut<GetallStudentsController>(() => GetallStudentsController(database.studentDao));
+
+    // Lazy load AdminScreenController and pass SubjectDao as a dependency
+    // Get.lazyPut<GetAllSubjectsController>(() => GetAllSubjectsController(database.subjectDao));
+
+  
   }
 }

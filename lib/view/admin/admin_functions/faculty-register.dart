@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_flavors/app/utils/color.dart';
 import 'package:flutter_flavors/controller/admin/add_faculty/addfaculty_controller.dart';
 import 'package:flutter_flavors/controller/admin/get_all_subjects/getallsubjects_controller.dart';
-import 'package:flutter_flavors/core/local_database/dao/subjectdao.dart';
 import 'package:flutter_flavors/widgets/custom_appbar.dart';
 import 'package:get/get.dart';
 
@@ -14,7 +13,6 @@ class FacultyRegister extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.find<AddFacultyController>();
     final subjectcontroller = Get.find<GetAllSubjectsController>();
-    // final subjectcontroller = Get.find<GetAllSubjectsController>();
 
     return Scaffold(
       appBar: CustomAppBar(
@@ -82,18 +80,18 @@ class FacultyRegister extends StatelessWidget {
             const SizedBox(height: 15),
             
             // Email Field
-            TextFormField(
-              keyboardType: TextInputType.emailAddress,
-              decoration: InputDecoration(
-                labelText: 'Email',
-                errorText: controller.emailError.value,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              onChanged: controller.email,
-            ),
-            const SizedBox(height: 15),
+            // TextFormField(
+            //   keyboardType: TextInputType.emailAddress,
+            //   decoration: InputDecoration(
+            //     labelText: 'Email',
+            //     errorText: controller.emailError.value,
+            //     border: OutlineInputBorder(
+            //       borderRadius: BorderRadius.circular(10),
+            //     ),
+            //   ),
+            //   onChanged: controller.email,
+            // ),
+            // const SizedBox(height: 15),
             
             // Salary Field
             TextFormField(
@@ -112,16 +110,28 @@ class FacultyRegister extends StatelessWidget {
             const SizedBox(height: 15),
 
             // Assign subject to faculty
-            TextFormField(
-              decoration: InputDecoration(
-                labelText: 'Subject',
-                errorText: controller.subjectError.value,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              // onChanged: subjectcontroller.subjects.,
-            ),
+Obx(() => DropdownButtonFormField<String>(
+      decoration: InputDecoration(
+        labelText: 'Subject',
+        errorText: controller.subjectError.value,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+      ),
+      value: controller.subject.value.isNotEmpty ? controller.subject.value : null,
+      hint: const Text("Select a subject"),
+      isExpanded: true,
+      items: subjectcontroller.subjects.map((subject) {
+        return DropdownMenuItem<String>(
+          value: subject.name,
+          child: Text(subject.name),
+        );
+      }).toList(),
+      onChanged: (value) {
+        controller.subject.value = value ?? ''; // Assign selected subject
+      },
+    )),
+
 
 
             const SizedBox(height: 15),            

@@ -74,7 +74,7 @@ class ShowAllFaculty extends StatelessWidget {
                       SizedBox(height: 4),
                       Row(
                         children: [
-                          Icon(Icons.phone, size: 16, color: AppColors.blue),
+                          Icon(Icons.menu_book_sharp, size: 16, color: AppColors.green),
                           SizedBox(width: 4),
                           Text(teacher.subject),
                         ],
@@ -92,7 +92,12 @@ class ShowAllFaculty extends StatelessWidget {
                         children: [
                           Icon(Icons.email, size: 16, color: AppColors.red),
                           SizedBox(width: 4),
-                          Text(teacher.email),
+                          Flexible(
+                            child: Text(
+                              teacher.username+"@college.com",
+                              overflow: TextOverflow.visible,
+                            ),
+                          ),
                         ],
                       ),
                     ],
@@ -110,7 +115,7 @@ class ShowAllFaculty extends StatelessWidget {
                       IconButton(
                         icon: Icon(Icons.email, color: AppColors.red),
                         onPressed: () {
-                          String emailUrl = "mailto:${teacher.email}";
+                          String emailUrl = "mailto:${teacher.username+"@college.com"}";
                           launchUrl(Uri.parse(emailUrl));
                         },
                       ),
