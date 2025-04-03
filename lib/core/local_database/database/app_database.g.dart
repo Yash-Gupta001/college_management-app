@@ -86,6 +86,8 @@ class _$AppDatabase extends AppDatabase {
 
   EventDao? _eventDaoInstance;
 
+  BranchDao? _branchdaoInstance;
+
   Future<sqflite.Database> open(
     String path,
     List<Migration> migrations, [
@@ -110,17 +112,19 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `admin_entity` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `username` TEXT NOT NULL, `password` TEXT NOT NULL, `name` TEXT NOT NULL, `role` TEXT NOT NULL, `email` TEXT NOT NULL)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `student_entity` (`rollNo` INTEGER PRIMARY KEY AUTOINCREMENT, `username` TEXT NOT NULL, `password` TEXT NOT NULL, `name` TEXT NOT NULL, `email` TEXT NOT NULL, `contactNo` TEXT NOT NULL, `fees` INTEGER NOT NULL)');
+            'CREATE TABLE IF NOT EXISTS `student_entity` (`rollNo` INTEGER PRIMARY KEY AUTOINCREMENT, `username` TEXT NOT NULL, `password` TEXT NOT NULL, `name` TEXT NOT NULL, `contactNo` TEXT NOT NULL, `fees` INTEGER NOT NULL)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `faculty_entity` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `lastname` TEXT NOT NULL, `username` TEXT NOT NULL, `password` TEXT NOT NULL, `salary` REAL NOT NULL, `contactNo` TEXT NOT NULL, `subject` TEXT NOT NULL)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `subject_entity` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL)');
+            'CREATE TABLE IF NOT EXISTS `subject_entity` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `branchId` INTEGER NOT NULL, FOREIGN KEY (`branchId`) REFERENCES `branch_entity` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `student_subject_entity` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `studentRollNo` INTEGER NOT NULL, `subjectId` INTEGER NOT NULL, FOREIGN KEY (`studentRollNo`) REFERENCES `student_entity` (`rollNo`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`subjectId`) REFERENCES `subject_entity` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `faculty_subject_entity` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `facultyId` INTEGER NOT NULL, `subjectId` INTEGER NOT NULL, FOREIGN KEY (`facultyId`) REFERENCES `faculty_entity` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`subjectId`) REFERENCES `subject_entity` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `events` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `title` TEXT NOT NULL, `date` INTEGER NOT NULL, `type` TEXT NOT NULL, `description` TEXT)');
+            'CREATE TABLE IF NOT EXISTS `event_entity` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `title` TEXT NOT NULL, `date` INTEGER NOT NULL, `type` TEXT NOT NULL, `description` TEXT)');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `branch_entity` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -164,6 +168,11 @@ class _$AppDatabase extends AppDatabase {
   EventDao get eventDao {
     return _eventDaoInstance ??= _$EventDao(database, changeListener);
   }
+
+  @override
+  BranchDao get branchdao {
+    return _branchdaoInstance ??= _$BranchDao(database, changeListener);
+  }
 }
 
 class _$StudentDao extends StudentDao {
@@ -179,7 +188,6 @@ class _$StudentDao extends StudentDao {
                   'username': item.username,
                   'password': item.password,
                   'name': item.name,
-                  'email': item.email,
                   'contactNo': item.contactNo,
                   'fees': item.fees
                 }),
@@ -192,7 +200,6 @@ class _$StudentDao extends StudentDao {
                   'username': item.username,
                   'password': item.password,
                   'name': item.name,
-                  'email': item.email,
                   'contactNo': item.contactNo,
                   'fees': item.fees
                 }),
@@ -205,7 +212,6 @@ class _$StudentDao extends StudentDao {
                   'username': item.username,
                   'password': item.password,
                   'name': item.name,
-                  'email': item.email,
                   'contactNo': item.contactNo,
                   'fees': item.fees
                 });
@@ -230,7 +236,6 @@ class _$StudentDao extends StudentDao {
             username: row['username'] as String,
             password: row['password'] as String,
             name: row['name'] as String,
-            email: row['email'] as String,
             contactNo: row['contactNo'] as String,
             fees: row['fees'] as int));
   }
@@ -247,7 +252,6 @@ class _$StudentDao extends StudentDao {
             username: row['username'] as String,
             password: row['password'] as String,
             name: row['name'] as String,
-            email: row['email'] as String,
             contactNo: row['contactNo'] as String,
             fees: row['fees'] as int),
         arguments: [username, password]);
@@ -262,7 +266,6 @@ class _$StudentDao extends StudentDao {
             username: row['username'] as String,
             password: row['password'] as String,
             name: row['name'] as String,
-            email: row['email'] as String,
             contactNo: row['contactNo'] as String,
             fees: row['fees'] as int),
         arguments: [username]);
@@ -423,20 +426,29 @@ class _$SubjectDao extends SubjectDao {
         _subjectEntityInsertionAdapter = InsertionAdapter(
             database,
             'subject_entity',
-            (SubjectEntity item) =>
-                <String, Object?>{'id': item.id, 'name': item.name}),
+            (SubjectEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'name': item.name,
+                  'branchId': item.branchId
+                }),
         _subjectEntityUpdateAdapter = UpdateAdapter(
             database,
             'subject_entity',
             ['id'],
-            (SubjectEntity item) =>
-                <String, Object?>{'id': item.id, 'name': item.name}),
+            (SubjectEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'name': item.name,
+                  'branchId': item.branchId
+                }),
         _subjectEntityDeletionAdapter = DeletionAdapter(
             database,
             'subject_entity',
             ['id'],
-            (SubjectEntity item) =>
-                <String, Object?>{'id': item.id, 'name': item.name});
+            (SubjectEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'name': item.name,
+                  'branchId': item.branchId
+                });
 
   final sqflite.DatabaseExecutor database;
 
@@ -453,16 +465,31 @@ class _$SubjectDao extends SubjectDao {
   @override
   Future<List<SubjectEntity>> getAllSubjects() async {
     return _queryAdapter.queryList('SELECT * FROM subject_entity',
-        mapper: (Map<String, Object?> row) =>
-            SubjectEntity(id: row['id'] as int?, name: row['name'] as String));
+        mapper: (Map<String, Object?> row) => SubjectEntity(
+            id: row['id'] as int?,
+            name: row['name'] as String,
+            branchId: row['branchId'] as int));
   }
 
   @override
   Future<SubjectEntity?> getSubjectById(int id) async {
     return _queryAdapter.query('SELECT * FROM subject_entity WHERE id = ?1',
-        mapper: (Map<String, Object?> row) =>
-            SubjectEntity(id: row['id'] as int?, name: row['name'] as String),
+        mapper: (Map<String, Object?> row) => SubjectEntity(
+            id: row['id'] as int?,
+            name: row['name'] as String,
+            branchId: row['branchId'] as int),
         arguments: [id]);
+  }
+
+  @override
+  Future<List<SubjectEntity>> getSubjectsByBranch(int branchId) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM subject_entity WHERE branchId = ?1',
+        mapper: (Map<String, Object?> row) => SubjectEntity(
+            id: row['id'] as int?,
+            name: row['name'] as String,
+            branchId: row['branchId'] as int),
+        arguments: [branchId]);
   }
 
   @override
@@ -702,32 +729,32 @@ class _$EventDao extends EventDao {
     this.database,
     this.changeListener,
   )   : _queryAdapter = QueryAdapter(database),
-        _eventInsertionAdapter = InsertionAdapter(
+        _eventEntityInsertionAdapter = InsertionAdapter(
             database,
-            'events',
-            (Event item) => <String, Object?>{
+            'event_entity',
+            (EventEntity item) => <String, Object?>{
                   'id': item.id,
                   'title': item.title,
                   'date': _dateTimeConverter.encode(item.date),
                   'type': item.type,
                   'description': item.description
                 }),
-        _eventUpdateAdapter = UpdateAdapter(
+        _eventEntityUpdateAdapter = UpdateAdapter(
             database,
-            'events',
+            'event_entity',
             ['id'],
-            (Event item) => <String, Object?>{
+            (EventEntity item) => <String, Object?>{
                   'id': item.id,
                   'title': item.title,
                   'date': _dateTimeConverter.encode(item.date),
                   'type': item.type,
                   'description': item.description
                 }),
-        _eventDeletionAdapter = DeletionAdapter(
+        _eventEntityDeletionAdapter = DeletionAdapter(
             database,
-            'events',
+            'event_entity',
             ['id'],
-            (Event item) => <String, Object?>{
+            (EventEntity item) => <String, Object?>{
                   'id': item.id,
                   'title': item.title,
                   'date': _dateTimeConverter.encode(item.date),
@@ -741,16 +768,17 @@ class _$EventDao extends EventDao {
 
   final QueryAdapter _queryAdapter;
 
-  final InsertionAdapter<Event> _eventInsertionAdapter;
+  final InsertionAdapter<EventEntity> _eventEntityInsertionAdapter;
 
-  final UpdateAdapter<Event> _eventUpdateAdapter;
+  final UpdateAdapter<EventEntity> _eventEntityUpdateAdapter;
 
-  final DeletionAdapter<Event> _eventDeletionAdapter;
+  final DeletionAdapter<EventEntity> _eventEntityDeletionAdapter;
 
   @override
-  Future<List<Event>> getAllEvents() async {
-    return _queryAdapter.queryList('SELECT * FROM events ORDER BY date ASC',
-        mapper: (Map<String, Object?> row) => Event(
+  Future<List<EventEntity>> getAllEvents() async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM event_entity ORDER BY date ASC',
+        mapper: (Map<String, Object?> row) => EventEntity(
             id: row['id'] as int?,
             title: row['title'] as String,
             date: _dateTimeConverter.decode(row['date'] as int),
@@ -759,18 +787,13 @@ class _$EventDao extends EventDao {
   }
 
   @override
-  Future<List<Event>> getEventsInRange(
+  Future<List<EventEntity>> getEventsInRange(
     DateTime start,
     DateTime end,
   ) async {
     return _queryAdapter.queryList(
-        'SELECT * FROM events WHERE date BETWEEN ?1 AND ?2 ORDER BY date ASC',
-        mapper: (Map<String, Object?> row) => Event(
-            id: row['id'] as int?,
-            title: row['title'] as String,
-            date: _dateTimeConverter.decode(row['date'] as int),
-            type: row['type'] as String,
-            description: row['description'] as String?),
+        'SELECT * FROM event_entity WHERE date BETWEEN ?1 AND ?2 ORDER BY date ASC',
+        mapper: (Map<String, Object?> row) => EventEntity(id: row['id'] as int?, title: row['title'] as String, date: _dateTimeConverter.decode(row['date'] as int), type: row['type'] as String, description: row['description'] as String?),
         arguments: [
           _dateTimeConverter.encode(start),
           _dateTimeConverter.encode(end)
@@ -778,10 +801,10 @@ class _$EventDao extends EventDao {
   }
 
   @override
-  Future<List<Event>> getEventsByType(String type) async {
+  Future<List<EventEntity>> getEventsByType(String type) async {
     return _queryAdapter.queryList(
-        'SELECT * FROM events WHERE type = ?1 ORDER BY date ASC',
-        mapper: (Map<String, Object?> row) => Event(
+        'SELECT * FROM event_entity WHERE type = ?1 ORDER BY date ASC',
+        mapper: (Map<String, Object?> row) => EventEntity(
             id: row['id'] as int?,
             title: row['title'] as String,
             date: _dateTimeConverter.decode(row['date'] as int),
@@ -791,18 +814,59 @@ class _$EventDao extends EventDao {
   }
 
   @override
-  Future<void> insertEvent(Event event) async {
-    await _eventInsertionAdapter.insert(event, OnConflictStrategy.abort);
+  Future<void> insertEvent(EventEntity event) async {
+    await _eventEntityInsertionAdapter.insert(event, OnConflictStrategy.abort);
   }
 
   @override
-  Future<void> updateEvent(Event event) async {
-    await _eventUpdateAdapter.update(event, OnConflictStrategy.abort);
+  Future<void> updateEvent(EventEntity event) async {
+    await _eventEntityUpdateAdapter.update(event, OnConflictStrategy.abort);
   }
 
   @override
-  Future<void> deleteEvent(Event event) async {
-    await _eventDeletionAdapter.delete(event);
+  Future<void> deleteEvent(EventEntity event) async {
+    await _eventEntityDeletionAdapter.delete(event);
+  }
+}
+
+class _$BranchDao extends BranchDao {
+  _$BranchDao(
+    this.database,
+    this.changeListener,
+  )   : _queryAdapter = QueryAdapter(database),
+        _branchEntityInsertionAdapter = InsertionAdapter(
+            database,
+            'branch_entity',
+            (BranchEntity item) =>
+                <String, Object?>{'id': item.id, 'name': item.name});
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<BranchEntity> _branchEntityInsertionAdapter;
+
+  @override
+  Future<List<BranchEntity>> getAllBranches() async {
+    return _queryAdapter.queryList('SELECT * FROM branch_entity',
+        mapper: (Map<String, Object?> row) =>
+            BranchEntity(id: row['id'] as int, name: row['name'] as String));
+  }
+
+  @override
+  Future<String?> getBranchNameBySubject(String subjectName) async {
+    return _queryAdapter.query(
+        'SELECT b.name      FROM branch_entity b      INNER JOIN subject_entity s ON b.id = s.branchId     WHERE s.name = ?1',
+        mapper: (Map<String, Object?> row) => row.values.first as String,
+        arguments: [subjectName]);
+  }
+
+  @override
+  Future<void> insertBranch(BranchEntity branch) async {
+    await _branchEntityInsertionAdapter.insert(
+        branch, OnConflictStrategy.replace);
   }
 }
 

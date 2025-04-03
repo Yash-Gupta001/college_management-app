@@ -2,8 +2,11 @@ import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_flavors/app/utils/color.dart';
 import 'package:flutter_flavors/common/menu_cell.dart';
+import 'package:flutter_flavors/controller/student/my_course/mycourse_binding.dart';
 import 'package:flutter_flavors/controller/student/studentscreen_controller.dart';
+import 'package:flutter_flavors/view/student/student_functions/mycourse.dart';
 import 'package:flutter_flavors/view/student/student_functions/show_attendence.dart';
+import 'package:flutter_flavors/view/student/student_functions/show_fees.dart';
 import 'package:flutter_flavors/widgets/custom_appbar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -69,9 +72,12 @@ class StudentHomeScreen extends StatelessWidget {
     } else if (menuData.title == "Show Attendance") {
       Get.to(ShowAttendence());
     } else if (menuData.title == "Fees") {
-      // Get.to(() => GrantLeave(), binding: AdminScreenBinding());
+      Get.to(ShowFees());
     } else if (menuData.title == "Show Holidays") {
       // Get.to(() => ShowAllSubjects(), binding: AdminScreenBinding());
+    }
+    else if (menuData.title == "My Course") {
+      Get.to(() => MyCourse(), binding: MyCourseBinding());
     }
   }
 }

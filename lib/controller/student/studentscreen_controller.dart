@@ -12,6 +12,7 @@ class StudentScreenController extends GetxController {
       MenuData(title: "Show Attendance", icon: Icons.assignment_outlined),
       MenuData(title: "Fees", icon: Icons.payments_outlined),
       MenuData(title: "Show Holidays", icon: Icons.beach_access_outlined),
+      MenuData(title: "My Course", icon: Icons.book_sharp),
     ];
     return studentMenu;
   }

@@ -30,7 +30,7 @@ class AdminLogin extends StatelessWidget {
                 
                 // Username Field
                 TextField(
-                  onChanged: (value) => controller.insert_username.value = value,
+                  onChanged: (value) => controller.insert_adminname.value = value,
                   decoration: InputDecoration(
                     labelText: 'Username',
                     prefixIcon: const Icon(Icons.person,color: AppColors.admin_primary,),
@@ -43,7 +43,7 @@ class AdminLogin extends StatelessWidget {
                 
                 // Password Field
                 TextField(
-                  onChanged: (value) => controller.insert_password.value = value,
+                  onChanged: (value) => controller.insert_adminpassword.value = value,
                   obscureText: true,
                   decoration: InputDecoration(
                     labelText: 'Password',

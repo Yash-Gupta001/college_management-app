@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_flavors/app/utils/color.dart';
-import 'package:flutter_flavors/controller/admin/get_all_subjects/getallsubjects_controller.dart';
 import 'package:flutter_flavors/controller/student/register/studentregister_controller.dart';
 import 'package:flutter_flavors/widgets/custom_appbar.dart';
 import 'package:get/get.dart';
@@ -48,20 +47,6 @@ class StudentRegister extends StatelessWidget {
                   ),
                 ),
                 onChanged: controller.username,
-              ),
-              const SizedBox(height: 15),
-
-              // Email Field
-              TextFormField(
-                keyboardType: TextInputType.emailAddress,
-                decoration: InputDecoration(
-                  labelText: 'Email',
-                  errorText: controller.emailError.value,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                onChanged: controller.email,
               ),
               const SizedBox(height: 15),
 

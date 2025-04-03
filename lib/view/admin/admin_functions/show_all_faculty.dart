@@ -24,18 +24,20 @@ class ShowAllFaculty extends StatelessWidget {
       ),
       body: Obx(() {
         if (controller.teachers.isEmpty) {
-          return const Center(child: Text("No Teacher Registered."));
+          return const Center(child: Text("No Teacher Found."));
         }
         return ListView.builder(
           itemCount: controller.teachers.length,
           itemBuilder: (context, index) {
             final teacher = controller.teachers[index];
+            final branchName =
+                controller.branchNames[teacher.name] ??
+                "Loading..."; // Get branch name
+
             return Slidable(
-              endActionPane: ActionPane(
-                motion: const DrawerMotion(),
-                extentRatio: 0.25,
+              startActionPane: ActionPane(
+                motion: const ScrollMotion(),
                 children: [
-                  // Delete button
                   SlidableAction(
                     onPressed: (context) async {
                       await controller.facultyDao.deleteFaculty(teacher);
@@ -46,10 +48,15 @@ class ShowAllFaculty extends StatelessWidget {
                     icon: Icons.delete,
                     label: 'Delete',
                   ),
-                  // Edit button
+                ],
+              ),
+
+              endActionPane: ActionPane(
+                motion: const ScrollMotion(),
+                children: [
                   SlidableAction(
                     onPressed: (context) {
-                      // Add edit functionality if needed
+                      // Edit functionality
                     },
                     backgroundColor: AppColors.green,
                     foregroundColor: AppColors.white,
@@ -58,6 +65,7 @@ class ShowAllFaculty extends StatelessWidget {
                   ),
                 ],
               ),
+
               child: Card(
                 margin: const EdgeInsets.symmetric(
                   vertical: 8.0,
@@ -74,9 +82,25 @@ class ShowAllFaculty extends StatelessWidget {
                       SizedBox(height: 4),
                       Row(
                         children: [
-                          Icon(Icons.menu_book_sharp, size: 16, color: AppColors.green),
+                          Icon(
+                            Icons.menu_book_sharp,
+                            size: 16,
+                            color: AppColors.green,
+                          ),
                           SizedBox(width: 4),
                           Text(teacher.subject),
+                        ],
+                      ),
+                      SizedBox(height: 4),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.account_balance,
+                            size: 16,
+                            color: AppColors.purple,
+                          ),
+                          SizedBox(width: 4),
+                          Text(branchName),
                         ],
                       ),
                       SizedBox(height: 4),
@@ -94,7 +118,7 @@ class ShowAllFaculty extends StatelessWidget {
                           SizedBox(width: 4),
                           Flexible(
                             child: Text(
-                              teacher.username+"@college.com",
+                              "${teacher.username}@college.com",
                               overflow: TextOverflow.visible,
                             ),
                           ),
@@ -115,7 +139,8 @@ class ShowAllFaculty extends StatelessWidget {
                       IconButton(
                         icon: Icon(Icons.email, color: AppColors.red),
                         onPressed: () {
-                          String emailUrl = "mailto:${teacher.username+"@college.com"}";
+                          String emailUrl =
+                              "mailto:${teacher.username}@college.com";
                           launchUrl(Uri.parse(emailUrl));
                         },
                       ),

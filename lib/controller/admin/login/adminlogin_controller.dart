@@ -6,11 +6,11 @@ class AdminLoginController extends GetxController {
   String username = "admin123";
   String password = "admin123";
 
-  RxString insert_username = "".obs;
-  RxString insert_password = "".obs;
+  RxString insert_adminname = "".obs;
+  RxString insert_adminpassword = "".obs;
 
   void Validate(){
-    if(username == insert_username.value && password ==insert_password.value ){
+    if(username == insert_adminname.value && password ==insert_adminpassword.value ){
       Get.to(
         () => AdminHomeScreen(),
         binding: AdminScreenBinding(),
@@ -28,7 +28,7 @@ class AdminLoginController extends GetxController {
   }
 
   void clearFields() {
-    insert_username.value = "";
-    insert_password.value = "";
+    insert_adminname.value = "";
+    insert_adminpassword.value = "";
   }
 }

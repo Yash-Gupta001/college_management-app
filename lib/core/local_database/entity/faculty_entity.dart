@@ -9,7 +9,6 @@ class FacultyEntity {
   final String lastname;
   final String username;
   final String password;
-  // final String email;
   final double salary;
   final String contactNo;
   final String subject;
@@ -22,7 +21,6 @@ class FacultyEntity {
     required this.username,
     required this.password,
     required this.name,
-    // required this.email,
     required this.contactNo,
     required this.subject,
   });

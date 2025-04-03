@@ -19,6 +19,6 @@ class AddfacultyBinding extends Bindings {
    
 
     // Lazy load AdminScreenController and pass SubjectDao as a dependency
-    Get.lazyPut<GetAllSubjectsController>(() => GetAllSubjectsController(database.subjectDao));
+    Get.lazyPut<GetAllSubjectsController>(() => GetAllSubjectsController(database.subjectDao,database.branchdao));
   }
 }

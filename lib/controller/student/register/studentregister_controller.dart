@@ -11,14 +11,12 @@ class StudentRegisterController extends GetxController {
   var name = ''.obs;
   var username = ''.obs;
   var password = ''.obs;
-  var email = ''.obs;
   var contactNo = ''.obs;
 
   // Validation observables
   var nameError = Rx<String?>(null);
   var usernameError = Rx<String?>(null);
   var passwordError = Rx<String?>(null);
-  var emailError = Rx<String?>(null);
   var contactNoError = Rx<String?>(null);
 
   // Loading state
@@ -29,7 +27,6 @@ class StudentRegisterController extends GetxController {
     name.value = '';
     username.value = '';
     password.value = '';
-    email.value = '';
     contactNo.value = '';
     clearErrors();
   }
@@ -39,7 +36,6 @@ class StudentRegisterController extends GetxController {
     nameError.value = null;
     usernameError.value = null;
     passwordError.value = null;
-    emailError.value = null;
     contactNoError.value = null;
   }
 
@@ -71,15 +67,6 @@ class StudentRegisterController extends GetxController {
       isValid = false;
     }
 
-    if (email.value.isEmpty) {
-      emailError.value = 'Email is required';
-      isValid = false;
-    } else if (!GetUtils.isEmail(email.value)) {
-      emailError.value = 'Enter a valid email';
-      isValid = false;
-    }
-
-
     if (contactNo.value.isEmpty) {
       contactNoError.value = 'Contact number is required';
       isValid = false;
@@ -97,7 +84,6 @@ class StudentRegisterController extends GetxController {
       name: name.value,
       username: username.value,
       password: password.value,
-      email: email.value,
       contactNo: contactNo.value,
     );
   }
@@ -120,10 +106,10 @@ class StudentRegisterController extends GetxController {
 
         // Insert new student
         await studentDao.insertStudent(student);
-        Get.snackbar('Success', 'Faculty added successfully');
+        Get.snackbar('Success', 'Student added successfully');
         clearFields();
       } catch (e) {
-        Get.snackbar('Error', 'Failed to add faculty: ${e.toString()}');
+        Get.snackbar('Error', 'Failed to add Student: ${e.toString()}');
       } finally {
         isLoading(false);
         clearFields();

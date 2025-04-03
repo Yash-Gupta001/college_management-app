@@ -5,10 +5,12 @@ import 'package:get/get.dart';
 class GetAllSubjectsBinding extends Bindings {
   @override
   void dependencies() {
-    // Access the database instance and provide the SubjectDao
+    // Access the database instance and provide both DAOs
     final database = Get.find<AppDatabase>();
 
-    // Lazy load AdminScreenController and pass SubjectDao as a dependency
-    Get.lazyPut<GetAllSubjectsController>(() => GetAllSubjectsController(database.subjectDao));
+    // Lazy load GetAllSubjectsController with both SubjectDao and BranchDao
+    Get.lazyPut<GetAllSubjectsController>(
+      () => GetAllSubjectsController(database.subjectDao, database.branchdao),
+    );
   }
 }

@@ -1,41 +1,77 @@
 import 'package:flutter_flavors/core/local_database/dao/subjectdao.dart';
+import 'package:flutter_flavors/core/local_database/dao/branchdao.dart';
 import 'package:flutter_flavors/core/local_database/entity/subject_entity.dart';
+import 'package:flutter_flavors/core/local_database/entity/branch_entity.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_flavors/model/menu_data.dart';
 
 class GetAllSubjectsController extends GetxController {
   final SubjectDao subjectDao;
+  final BranchDao branchDao;
+  var menuData = RxList<MenuData>([]);
+
   var subjects = <SubjectEntity>[].obs;
+  var branches = <BranchEntity>[].obs;
 
-  GetAllSubjectsController(this.subjectDao);
+  GetAllSubjectsController(this.subjectDao, this.branchDao);
 
-  // Method to insert a subject and update the list
+
+
+  Future<void> _loadSubjects() async {
+    final fetchedSubjects = await subjectDao.getAllSubjects();
+    subjects.value = fetchedSubjects;
+  }
+
+  Future<void> _loadBranches() async {
+    final fetchedBranches = await branchDao.getAllBranches();
+    branches.value = fetchedBranches;
+  }
+
+  // Group subjects under respective branches
+  Map<BranchEntity, List<SubjectEntity>> get groupedSubjects {
+    final Map<int, BranchEntity> branchMap = {
+      for (var branch in branches) branch.id: branch
+    };
+
+    Map<BranchEntity, List<SubjectEntity>> grouped = {};
+    
+    for (var subject in subjects) {
+      final branch = branchMap[subject.branchId];
+      if (branch != null) {
+        grouped.putIfAbsent(branch, () => []).add(subject);
+      }
+    }
+
+    return grouped;
+  }
+
   Future<void> insertSubject(SubjectEntity subject) async {
-    // Check if the subject already exists
     final existingSubjects = await subjectDao.getAllSubjects();
     bool subjectExists = existingSubjects.any(
       (s) => s.name.toLowerCase() == subject.name.toLowerCase(),
-    ); // Assuming 'id' is the unique key
+    );
+
     if (subjectExists) {
-      Get.snackbar('Failed', 'Subject Already exists!');
+      Get.snackbar('Failed', 'Subject already exists!');
     } else {
+      if (subject.branchId == 0) {
+        Get.snackbar('Error', 'Please select a valid branch.');
+        return;
+      }
       await subjectDao.insertSubject(subject);
-      Get.snackbar('Success', 'Subject added successfully!');
-      _loadSubjects(); // Reload the subjects after adding one
+      _loadSubjects();
     }
   }
 
-  // Method to delete a subject and update the list
   Future<void> deleteSubject(SubjectEntity subject) async {
     await subjectDao.deleteSubject(subject);
-    _loadSubjects(); // Reload the subjects after deleting one
+    _loadSubjects();
   }
 
-  // Method to Edit Subject Name
   Future<void> editSubject(SubjectEntity subject) async {
-    TextEditingController nameController = TextEditingController(
-      text: subject.name,
-    );
+    TextEditingController nameController = TextEditingController(text: subject.name);
+    int selectedBranchId = subject.branchId;
 
     Get.defaultDialog(
       title: "Edit Subject",
@@ -43,44 +79,71 @@ class GetAllSubjectsController extends GetxController {
         children: [
           TextField(
             controller: nameController,
-            decoration: InputDecoration(labelText: "Subject Name"),
+            decoration: const InputDecoration(labelText: "Subject Name"),
           ),
+          const SizedBox(height: 10),
+          Obx(() => DropdownButtonFormField<int>(
+                value: selectedBranchId,
+                items: branches.map((branch) {
+                  return DropdownMenuItem<int>(
+                    value: branch.id,
+                    child: Text(branch.name),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  selectedBranchId = value!;
+                },
+                decoration: const InputDecoration(
+                  labelText: 'Select Branch',
+                  border: OutlineInputBorder(),
+                ),
+              )),
         ],
       ),
       actions: [
         TextButton(
-          onPressed: () => Get.back(), // Close dialog
-          child: Text("Cancel"),
+          onPressed: () => Get.back(),
+          child: const Text("Cancel"),
         ),
         TextButton(
           onPressed: () async {
             if (nameController.text.trim().isNotEmpty) {
-              // Update the subject in the database
               SubjectEntity updatedSubject = SubjectEntity(
                 id: subject.id,
                 name: nameController.text.trim(),
+                branchId: selectedBranchId,
               );
               await subjectDao.updateSubject(updatedSubject);
-
-              _loadSubjects(); // Refresh the list
+              _loadSubjects();
             }
-            Get.back(); // Close dialog
+            Get.back();
           },
-          child: Text("Save"),
+          child: const Text("Save"),
         ),
       ],
     );
   }
 
-  // Method to load all subjects from the database
-  Future<void> _loadSubjects() async {
-    final fetchedSubjects = await subjectDao.getAllSubjects();
-    subjects.value = fetchedSubjects; // Update the observable list
+  List<MenuData> getBranchMenu() {
+    const List<MenuData> adminMenu = <MenuData>[
+      MenuData(title: "CSE", icon: Icons.computer),
+      MenuData(title: "CIVIL", icon: Icons.engineering),
+      MenuData(title: "MECHANICAL", icon: Icons.build),
+      MenuData(title: "ELECTRONICS", icon: Icons.electrical_services),
+    ];
+    return adminMenu;
   }
 
-  @override
+ 
+
+    @override
   void onInit() {
     super.onInit();
     _loadSubjects();
+    _loadBranches();
+    menuData.value = getBranchMenu();
+    print('Menu items: ${menuData.length}');
   }
+
+
 }

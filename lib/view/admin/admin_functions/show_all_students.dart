@@ -24,16 +24,15 @@ class ShowAllStudents extends StatelessWidget {
 
       body: Obx(() {
         if (controller.students.isEmpty) {
-          return const Center(child: Text("No Teacher Registered."));
+          return const Center(child: Text("No Student Found."));
         }
         return ListView.builder(
           itemCount: controller.students.length,
           itemBuilder: (context, index) {
             final students = controller.students[index];
             return Slidable(
-              endActionPane: ActionPane(
-                motion: const DrawerMotion(),
-                extentRatio: 0.25,
+              startActionPane: ActionPane(
+                motion: const ScrollMotion(),
                 children: [
                   // Delete button
                   SlidableAction(
@@ -46,7 +45,12 @@ class ShowAllStudents extends StatelessWidget {
                     icon: Icons.delete,
                     label: 'Delete',
                   ),
-                  // Edit button
+                ],
+              ),
+
+              endActionPane: ActionPane(
+                motion: const ScrollMotion(),
+                children: [
                   SlidableAction(
                     onPressed: (context) {
                       // Add edit functionality if needed
@@ -58,6 +62,8 @@ class ShowAllStudents extends StatelessWidget {
                   ),
                 ],
               ),
+
+              // Edit button
               child: Card(
                 margin: const EdgeInsets.symmetric(
                   vertical: 8.0,
@@ -71,14 +77,6 @@ class ShowAllStudents extends StatelessWidget {
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(height: 4),
-                      // Row(
-                      //   children: [
-                      //     Icon(Icons.menu_book_sharp, size: 16, color: AppColors.green),
-                      //     SizedBox(width: 4),
-                      //     Text(teacher.subject),
-                      //   ],
-                      // ),
                       SizedBox(height: 4),
                       Row(
                         children: [
@@ -94,7 +92,7 @@ class ShowAllStudents extends StatelessWidget {
                           SizedBox(width: 4),
                           Flexible(
                             child: Text(
-                              students.email,
+                              students.username + "@college.com",
                               overflow: TextOverflow.visible,
                             ),
                           ),
@@ -115,7 +113,8 @@ class ShowAllStudents extends StatelessWidget {
                       IconButton(
                         icon: Icon(Icons.email, color: AppColors.red),
                         onPressed: () {
-                          String emailUrl = "mailto:${students.email}";
+                          String emailUrl =
+                              "mailto:${students.username + "@college.com"}";
                           launchUrl(Uri.parse(emailUrl));
                         },
                       ),

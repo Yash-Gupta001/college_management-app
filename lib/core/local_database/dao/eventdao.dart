@@ -1,23 +1,23 @@
 import 'package:floor/floor.dart';
-import 'package:flutter_flavors/core/local_database/entity/events.dart';
+import 'package:flutter_flavors/core/local_database/entity/event_entity.dart';
 
 @dao
 abstract class EventDao {
-  @Query('SELECT * FROM events ORDER BY date ASC')
-  Future<List<Event>> getAllEvents();
+  @Query('SELECT * FROM event_entity ORDER BY date ASC')
+  Future<List<EventEntity>> getAllEvents();
 
-  @Query('SELECT * FROM events WHERE date BETWEEN :start AND :end ORDER BY date ASC')
-  Future<List<Event>> getEventsInRange(DateTime start, DateTime end);
+  @Query('SELECT * FROM event_entity WHERE date BETWEEN :start AND :end ORDER BY date ASC')
+  Future<List<EventEntity>> getEventsInRange(DateTime start, DateTime end);
 
-  @Query('SELECT * FROM events WHERE type = :type ORDER BY date ASC')
-  Future<List<Event>> getEventsByType(String type);
+  @Query('SELECT * FROM event_entity WHERE type = :type ORDER BY date ASC')
+  Future<List<EventEntity>> getEventsByType(String type);
 
   @insert
-  Future<void> insertEvent(Event event);
+  Future<void> insertEvent(EventEntity event);
 
   @update
-  Future<void> updateEvent(Event event);
+  Future<void> updateEvent(EventEntity event);
 
   @delete
-  Future<void> deleteEvent(Event event);
+  Future<void> deleteEvent(EventEntity event);
 }

@@ -79,20 +79,6 @@ class FacultyRegister extends StatelessWidget {
             ),
             const SizedBox(height: 15),
             
-            // Email Field
-            // TextFormField(
-            //   keyboardType: TextInputType.emailAddress,
-            //   decoration: InputDecoration(
-            //     labelText: 'Email',
-            //     errorText: controller.emailError.value,
-            //     border: OutlineInputBorder(
-            //       borderRadius: BorderRadius.circular(10),
-            //     ),
-            //   ),
-            //   onChanged: controller.email,
-            // ),
-            // const SizedBox(height: 15),
-            
             // Salary Field
             TextFormField(
               keyboardType: TextInputType.number,
