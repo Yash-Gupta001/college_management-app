@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_flavors/app/utils/color.dart';
 import 'package:flutter_flavors/widgets/custom_appbar.dart';
 
-class ShowAttendence extends StatelessWidget {
-  const ShowAttendence({super.key});
+class MarkAttendance extends StatelessWidget {
+  const MarkAttendance({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       appBar: CustomAppBar(
-        title: 'Show Attendance',
+        title: 'Mark Attendance',
         titleColor: AppColors.white,
-        backgroundColor: AppColors.student_primary,
+        backgroundColor: AppColors.faculty_primary,
         automaticallyImplyLeading: true,
-        centerTitle: true,
         ),
+
+      body: Center(),  
     );
   }
 }

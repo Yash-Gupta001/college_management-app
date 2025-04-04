@@ -112,7 +112,7 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `admin_entity` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `username` TEXT NOT NULL, `password` TEXT NOT NULL, `name` TEXT NOT NULL, `role` TEXT NOT NULL, `email` TEXT NOT NULL)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `student_entity` (`rollNo` INTEGER PRIMARY KEY AUTOINCREMENT, `username` TEXT NOT NULL, `password` TEXT NOT NULL, `name` TEXT NOT NULL, `contactNo` TEXT NOT NULL, `fees` INTEGER NOT NULL)');
+            'CREATE TABLE IF NOT EXISTS `student_entity` (`rollNo` INTEGER PRIMARY KEY AUTOINCREMENT, `username` TEXT NOT NULL, `password` TEXT NOT NULL, `name` TEXT NOT NULL, `contactNo` TEXT NOT NULL, `branchId` INTEGER NOT NULL, `fees` INTEGER NOT NULL)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `faculty_entity` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `lastname` TEXT NOT NULL, `username` TEXT NOT NULL, `password` TEXT NOT NULL, `salary` REAL NOT NULL, `contactNo` TEXT NOT NULL, `subject` TEXT NOT NULL)');
         await database.execute(
@@ -124,7 +124,7 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `event_entity` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `title` TEXT NOT NULL, `date` INTEGER NOT NULL, `type` TEXT NOT NULL, `description` TEXT)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `branch_entity` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL)');
+            'CREATE TABLE IF NOT EXISTS `branch_entity` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -189,6 +189,7 @@ class _$StudentDao extends StudentDao {
                   'password': item.password,
                   'name': item.name,
                   'contactNo': item.contactNo,
+                  'branchId': item.branchId,
                   'fees': item.fees
                 }),
         _studentEntityUpdateAdapter = UpdateAdapter(
@@ -201,6 +202,7 @@ class _$StudentDao extends StudentDao {
                   'password': item.password,
                   'name': item.name,
                   'contactNo': item.contactNo,
+                  'branchId': item.branchId,
                   'fees': item.fees
                 }),
         _studentEntityDeletionAdapter = DeletionAdapter(
@@ -213,6 +215,7 @@ class _$StudentDao extends StudentDao {
                   'password': item.password,
                   'name': item.name,
                   'contactNo': item.contactNo,
+                  'branchId': item.branchId,
                   'fees': item.fees
                 });
 
@@ -237,6 +240,7 @@ class _$StudentDao extends StudentDao {
             password: row['password'] as String,
             name: row['name'] as String,
             contactNo: row['contactNo'] as String,
+            branchId: row['branchId'] as int,
             fees: row['fees'] as int));
   }
 
@@ -253,6 +257,7 @@ class _$StudentDao extends StudentDao {
             password: row['password'] as String,
             name: row['name'] as String,
             contactNo: row['contactNo'] as String,
+            branchId: row['branchId'] as int,
             fees: row['fees'] as int),
         arguments: [username, password]);
   }
@@ -267,6 +272,7 @@ class _$StudentDao extends StudentDao {
             password: row['password'] as String,
             name: row['name'] as String,
             contactNo: row['contactNo'] as String,
+            branchId: row['branchId'] as int,
             fees: row['fees'] as int),
         arguments: [username]);
   }
@@ -852,7 +858,15 @@ class _$BranchDao extends BranchDao {
   Future<List<BranchEntity>> getAllBranches() async {
     return _queryAdapter.queryList('SELECT * FROM branch_entity',
         mapper: (Map<String, Object?> row) =>
-            BranchEntity(id: row['id'] as int, name: row['name'] as String));
+            BranchEntity(id: row['id'] as int?, name: row['name'] as String));
+  }
+
+  @override
+  Future<BranchEntity?> getBranchById(int branchId) async {
+    return _queryAdapter.query('SELECT * FROM branch_entity WHERE id = ?1',
+        mapper: (Map<String, Object?> row) =>
+            BranchEntity(id: row['id'] as int?, name: row['name'] as String),
+        arguments: [branchId]);
   }
 
   @override

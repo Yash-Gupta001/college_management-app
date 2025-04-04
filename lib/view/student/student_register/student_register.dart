@@ -3,6 +3,7 @@ import 'package:flutter_flavors/app/utils/color.dart';
 import 'package:flutter_flavors/controller/student/register/studentregister_controller.dart';
 import 'package:flutter_flavors/widgets/custom_appbar.dart';
 import 'package:get/get.dart';
+import 'package:flutter_flavors/core/local_database/entity/branch_entity.dart';
 
 class StudentRegister extends StatelessWidget {
   const StudentRegister({super.key});
@@ -10,7 +11,7 @@ class StudentRegister extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<StudentRegisterController>();
-    // final subjectcontroller = Get.find<GetAllSubjectsController>();
+
     return Scaffold(
       appBar: CustomAppBar(
         title: 'Register',
@@ -18,11 +19,11 @@ class StudentRegister extends StatelessWidget {
         titleColor: AppColors.white,
         centerTitle: true,
       ),
-
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Obx(
           () => Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               // Name Field
               TextFormField(
@@ -33,7 +34,7 @@ class StudentRegister extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                onChanged: controller.name,
+                onChanged: (value) => controller.name.value = value,
               ),
               const SizedBox(height: 15),
 
@@ -46,7 +47,7 @@ class StudentRegister extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                onChanged: controller.username,
+                onChanged: (value) => controller.username.value = value,
               ),
               const SizedBox(height: 15),
 
@@ -60,7 +61,7 @@ class StudentRegister extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                onChanged: controller.password,
+                onChanged: (value) => controller.password.value = value,
               ),
               const SizedBox(height: 15),
 
@@ -74,8 +75,32 @@ class StudentRegister extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                onChanged: controller.contactNo,
+                onChanged: (value) => controller.contactNo.value = value,
               ),
+              const SizedBox(height: 15),
+
+              // Branch Dropdown
+              DropdownButtonFormField<BranchEntity>(
+  isExpanded: true,
+  decoration: InputDecoration(
+    labelText: 'Select Branch',
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10),
+    ),
+  ),
+  value: controller.selectedBranch.value,
+  items: controller.branches.map((branch) {
+    return DropdownMenuItem<BranchEntity>(
+      value: branch,
+      child: Text(branch.name),
+    );
+  }).toList(),
+  onChanged: (value) {
+    controller.selectedBranch.value = value;
+    controller.selectedBranch.refresh(); // Force UI update
+  },
+),
+
               const SizedBox(height: 30),
 
               // Submit Button
@@ -89,8 +114,9 @@ class StudentRegister extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  onPressed:
-                      controller.isLoading.value ? null : controller.submitForm,
+                  onPressed: controller.isLoading.value
+                      ? null
+                      : controller.submitForm,
                   child: const Text(
                     'Register',
                     style: TextStyle(

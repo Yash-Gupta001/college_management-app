@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_flavors/app/utils/color.dart';
 import 'package:flutter_flavors/common/menu_cell.dart';
+import 'package:flutter_flavors/controller/faculty/apply_leave/facultyapplyleave_binding.dart';
 import 'package:flutter_flavors/controller/faculty/facultyscreen_controller.dart';
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
+import 'package:flutter_flavors/controller/faculty/mark_attendance/markattendance_binding.dart';
+import 'package:flutter_flavors/view/faculty/faculty_functions/facultyapply_leave.dart';
+import 'package:flutter_flavors/view/faculty/faculty_functions/markattendence.dart';
 import 'package:flutter_flavors/widgets/custom_appbar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -65,13 +69,13 @@ class FacultyHomeScreen extends StatelessWidget {
   void navigateToPage(FacultyScreenController controller, int index) {
     var menuData = controller.menuData[index];
     if (menuData.title == "Mark Attendence") {
-      // Get.to(() => PaySlip(), binding: AdminScreenBinding());
+      Get.to(() => MarkAttendance(), binding: MarkAttendanceBinding());
     } else if (menuData.title == "Pay Slip") {
       // Get.to(() => SelectHoliday(), binding: CalendarEventBinding());
     } else if (menuData.title == "Grant Leave") {
       // Get.to(() => GrantLeave(), binding: AdminScreenBinding());
     } else if (menuData.title == "Apply Leave") {
-      // Get.to(() => ShowAllSubjects(), binding: GetAllSubjectsBinding());
+      Get.to(() => FacultyApplyLeave(), binding: FacultyApplyLeaveBinding());
     } else if (menuData.title == "Show In-Out") {
       // Get.to(() => AddSubject(), binding: GetAllSubjectsBinding());
     }else if (menuData.title == "Show Holidays") {

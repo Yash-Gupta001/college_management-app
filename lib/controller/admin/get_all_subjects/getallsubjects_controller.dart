@@ -31,7 +31,7 @@ class GetAllSubjectsController extends GetxController {
   // Group subjects under respective branches
   Map<BranchEntity, List<SubjectEntity>> get groupedSubjects {
     final Map<int, BranchEntity> branchMap = {
-      for (var branch in branches) branch.id: branch
+      for (var branch in branches) branch.id!: branch
     };
 
     Map<BranchEntity, List<SubjectEntity>> grouped = {};

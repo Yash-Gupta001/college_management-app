@@ -2,36 +2,50 @@ import 'package:flutter_flavors/core/local_database/dao/studentdao.dart';
 import 'package:flutter_flavors/core/local_database/entity/student_entity.dart';
 import 'package:get/get.dart';
 
+import 'package:flutter_flavors/core/local_database/dao/branchdao.dart';
+import 'package:flutter_flavors/core/local_database/entity/branch_entity.dart';
+
 class StudentRegisterController extends GetxController {
-
   final StudentDao studentDao = Get.find();
+  final BranchDao branchDao = Get.find();
 
-
-  // Form field observables
+  // Form fields
   var name = ''.obs;
   var username = ''.obs;
   var password = ''.obs;
   var contactNo = ''.obs;
 
-  // Validation observables
+  // Branch handling
+  var branches = <BranchEntity>[].obs;
+  var selectedBranch = Rxn<BranchEntity>(null);
+
+  // Validation
   var nameError = Rx<String?>(null);
   var usernameError = Rx<String?>(null);
   var passwordError = Rx<String?>(null);
   var contactNoError = Rx<String?>(null);
-
-  // Loading state
   var isLoading = false.obs;
 
-  // Clear all fields
+  @override
+  void onInit() {
+    super.onInit();
+    loadBranches();
+  }
+
+  Future<void> loadBranches() async {
+    final allBranches = await branchDao.getAllBranches();
+    branches.assignAll(allBranches);
+  }
+
   void clearFields() {
     name.value = '';
     username.value = '';
     password.value = '';
     contactNo.value = '';
+    selectedBranch.value = null;
     clearErrors();
   }
 
-  // Clear all validation errors
   void clearErrors() {
     nameError.value = null;
     usernameError.value = null;
@@ -39,17 +53,14 @@ class StudentRegisterController extends GetxController {
     contactNoError.value = null;
   }
 
-  // Validate all fields
   bool validateFields() {
     clearErrors();
-
     var isValid = true;
 
     if (name.value.isEmpty) {
       nameError.value = 'Name is required';
       isValid = false;
     }
-
 
     if (username.value.isEmpty) {
       usernameError.value = 'Username is required';
@@ -75,47 +86,49 @@ class StudentRegisterController extends GetxController {
       isValid = false;
     }
 
+    if (selectedBranch.value == null) {
+      Get.snackbar('Error', 'Please select a branch');
+      isValid = false;
+    }
+
     return isValid;
   }
 
-  // Create FacultyEntity from current field values
   StudentEntity createStudent() {
-    return StudentEntity(
-      name: name.value,
-      username: username.value,
-      password: password.value,
-      contactNo: contactNo.value,
-    );
+  if (selectedBranch.value == null) {
+    throw Exception("Branch must be selected before creating a student.");
   }
+  
+  return StudentEntity(
+    name: name.value,
+    username: username.value,
+    password: password.value,
+    contactNo: contactNo.value,
+    branchId: selectedBranch.value!.id!, // Now it's guaranteed to be non-null
+  );
+}
 
-  // Submit form
+
   Future<void> submitForm() async {
     if (validateFields()) {
       try {
         isLoading(true);
         final student = createStudent();
 
-        // Check if username already exists
-        final existingFaculty = await studentDao.findStudentByUsername(
-          student.username,
-        );
-        if (existingFaculty != null) {
+        final existing = await studentDao.findStudentByUsername(student.username);
+        if (existing != null) {
           Get.snackbar('Error', 'Username already exists');
           return;
         }
 
-        // Insert new student
         await studentDao.insertStudent(student);
         Get.snackbar('Success', 'Student added successfully');
         clearFields();
       } catch (e) {
-        Get.snackbar('Error', 'Failed to add Student: ${e.toString()}');
+        Get.snackbar('Error', 'Failed to add student: ${e.toString()}');
       } finally {
         isLoading(false);
-        clearFields();
       }
-    } else {
-      Get.snackbar('Error', 'Please fix the errors in the form');
     }
   }
 }

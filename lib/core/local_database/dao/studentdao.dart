@@ -26,8 +26,9 @@ abstract class StudentDao {
   Future<StudentEntity?> findStudentByUsernameAndPassword(String username, String password);
 
   // Find a student by username
-  @Query('SELECT * FROM student_entity WHERE username = :username')
+  @Query('SELECT * FROM student_entity WHERE LOWER(username) = LOWER(:username)')
   Future<StudentEntity?> findStudentByUsername(String username);
+
 
   // Delete all students
   @Query('DELETE FROM student_entity')

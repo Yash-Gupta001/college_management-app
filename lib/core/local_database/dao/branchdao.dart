@@ -9,7 +9,9 @@ abstract class BranchDao {
   @Query('SELECT * FROM branch_entity')
   Future<List<BranchEntity>> getAllBranches();
 
-  // to get branch name based on subject name
+  @Query('SELECT * FROM branch_entity WHERE id = :branchId')
+  Future<BranchEntity?> getBranchById(int branchId);
+
   @Query('''
     SELECT b.name 
     FROM branch_entity b 

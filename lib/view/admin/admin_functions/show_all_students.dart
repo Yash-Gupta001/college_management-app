@@ -12,6 +12,7 @@ class ShowAllStudents extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<GetallStudentsController>();
+
     return Scaffold(
       appBar: CustomAppBar(
         title: "All Students",
@@ -21,7 +22,6 @@ class ShowAllStudents extends StatelessWidget {
         titleSpacing: 2.0,
         automaticallyImplyLeading: true,
       ),
-
       body: Obx(() {
         if (controller.students.isEmpty) {
           return const Center(child: Text("No Student Found."));
@@ -29,16 +29,17 @@ class ShowAllStudents extends StatelessWidget {
         return ListView.builder(
           itemCount: controller.students.length,
           itemBuilder: (context, index) {
-            final students = controller.students[index];
+            final student = controller.students[index];
+            final branchName = controller.branchNames[student.branchId] ?? "Loading...";
+
             return Slidable(
               startActionPane: ActionPane(
                 motion: const ScrollMotion(),
                 children: [
-                  // Delete button
                   SlidableAction(
                     onPressed: (context) async {
-                      await controller.studentDao.deleteStudent(students);
-                      controller.students.remove(students);
+                      await controller.studentDao.deleteStudent(student);
+                      controller.students.remove(student);
                     },
                     backgroundColor: AppColors.red,
                     foregroundColor: AppColors.white,
@@ -47,7 +48,6 @@ class ShowAllStudents extends StatelessWidget {
                   ),
                 ],
               ),
-
               endActionPane: ActionPane(
                 motion: const ScrollMotion(),
                 children: [
@@ -62,16 +62,11 @@ class ShowAllStudents extends StatelessWidget {
                   ),
                 ],
               ),
-
-              // Edit button
               child: Card(
-                margin: const EdgeInsets.symmetric(
-                  vertical: 8.0,
-                  horizontal: 16.0,
-                ),
+                margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
                 child: ListTile(
                   title: Text(
-                    "${students.name}",
+                    "${student.name}",
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   subtitle: Column(
@@ -80,9 +75,25 @@ class ShowAllStudents extends StatelessWidget {
                       SizedBox(height: 4),
                       Row(
                         children: [
+                          Icon(Icons.account_balance, size: 16, color: AppColors.purple),
+                          SizedBox(width: 4),
+                          Text(branchName), // Display Branch Name instead of ID
+                        ],
+                      ),
+                      SizedBox(height: 4),
+                      Row(
+                        children: [
                           Icon(Icons.phone, size: 16, color: AppColors.blue),
                           SizedBox(width: 4),
-                          Text(students.contactNo),
+                          Text(student.branchId.toString()),
+                        ],
+                      ),
+                      SizedBox(height: 4),
+                      Row(
+                        children: [
+                          Icon(Icons.phone, size: 16, color: AppColors.blue),
+                          SizedBox(width: 4),
+                          Text(student.contactNo),
                         ],
                       ),
                       SizedBox(height: 4),
@@ -92,7 +103,7 @@ class ShowAllStudents extends StatelessWidget {
                           SizedBox(width: 4),
                           Flexible(
                             child: Text(
-                              students.username + "@college.com",
+                              "${student.username}@college.com",
                               overflow: TextOverflow.visible,
                             ),
                           ),
@@ -106,15 +117,14 @@ class ShowAllStudents extends StatelessWidget {
                       IconButton(
                         icon: Icon(Icons.phone, color: AppColors.blue),
                         onPressed: () {
-                          String phoneUrl = "tel:${students.contactNo}";
+                          String phoneUrl = "tel:${student.contactNo}";
                           launchUrl(Uri.parse(phoneUrl));
                         },
                       ),
                       IconButton(
                         icon: Icon(Icons.email, color: AppColors.red),
                         onPressed: () {
-                          String emailUrl =
-                              "mailto:${students.username + "@college.com"}";
+                          String emailUrl = "mailto:${student.username}@college.com";
                           launchUrl(Uri.parse(emailUrl));
                         },
                       ),

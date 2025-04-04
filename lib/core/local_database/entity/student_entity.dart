@@ -9,6 +9,7 @@ class StudentEntity {
   final String password;
   final String name;
   final String contactNo;
+  final int branchId;
   final int fees;
 
   StudentEntity({
@@ -17,6 +18,8 @@ class StudentEntity {
     required this.password,
     required this.name,
     required this.contactNo,
-    this.fees = 25000, 
+    required this.branchId,
+    this.fees = 25000,
   });
 }
+

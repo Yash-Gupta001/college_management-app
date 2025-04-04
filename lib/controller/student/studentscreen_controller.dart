@@ -1,9 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_flavors/model/menu_data.dart';
 import 'package:get/get.dart';
+import 'package:flutter_flavors/core/local_database/dao/studentdao.dart';
+import 'package:flutter_flavors/core/local_database/entity/student_entity.dart';
 
 class StudentScreenController extends GetxController {
   var menuData = RxList<MenuData>([]);
+  final StudentDao studentDao;
+
+  var loggedInStudent = Rxn<StudentEntity>();  // Holds the student data
+
+
+  StudentScreenController(this.studentDao);
+
+  Future<void> fetchStudent(String username) async {
+    final student = await studentDao.findStudentByUsername(username);
+    if (student != null) {
+      loggedInStudent.value = student;
+    }
+  }
 
   // list of studentscreen functions
   List<MenuData> getStudentMenu() {
