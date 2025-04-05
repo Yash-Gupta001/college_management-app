@@ -95,19 +95,18 @@ class StudentRegisterController extends GetxController {
   }
 
   StudentEntity createStudent() {
-  if (selectedBranch.value == null) {
-    throw Exception("Branch must be selected before creating a student.");
-  }
-  
-  return StudentEntity(
-    name: name.value,
-    username: username.value,
-    password: password.value,
-    contactNo: contactNo.value,
-    branchId: selectedBranch.value!.id!, // Now it's guaranteed to be non-null
-  );
-}
+    if (selectedBranch.value == null) {
+      throw Exception("Branch must be selected before creating a student.");
+    }
 
+    return StudentEntity(
+      name: name.value,
+      username: username.value,
+      password: password.value,
+      contactNo: contactNo.value,
+      branchId: selectedBranch.value!.id!, // Now it's guaranteed to be non-null
+    );
+  }
 
   Future<void> submitForm() async {
     if (validateFields()) {
@@ -115,7 +114,9 @@ class StudentRegisterController extends GetxController {
         isLoading(true);
         final student = createStudent();
 
-        final existing = await studentDao.findStudentByUsername(student.username);
+        final existing = await studentDao.findStudentByUsername(
+          student.username,
+        );
         if (existing != null) {
           Get.snackbar('Error', 'Username already exists');
           return;

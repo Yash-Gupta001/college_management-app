@@ -3,8 +3,8 @@ import 'package:flutter_flavors/app/utils/color.dart';
 import 'package:flutter_flavors/common/menu_cell.dart';
 import 'package:flutter_flavors/controller/faculty/apply_leave/facultyapplyleave_binding.dart';
 import 'package:flutter_flavors/controller/faculty/facultyscreen_controller.dart';
-import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:flutter_flavors/controller/faculty/mark_attendance/markattendance_binding.dart';
+import 'package:flutter_flavors/startpage.dart';
 import 'package:flutter_flavors/view/faculty/faculty_functions/facultyapply_leave.dart';
 import 'package:flutter_flavors/view/faculty/faculty_functions/markattendence.dart';
 import 'package:flutter_flavors/widgets/custom_appbar.dart';
@@ -12,31 +12,47 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
 
-class FacultyHomeScreen extends StatelessWidget {
+class FacultyHomeScreen extends StatefulWidget {
   const FacultyHomeScreen();
+
+  @override
+  State<FacultyHomeScreen> createState() => _FacultyHomeScreenState();
+}
+
+class _FacultyHomeScreenState extends State<FacultyHomeScreen> {
+  DateTime? _lastPressed;
 
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<FacultyScreenController>();
-    return Scaffold(
-      appBar: CustomAppBar(
-        title: "Faculty Home",
-        titleColor: AppColors.white,
-        backgroundColor: AppColors.faculty_primary,
-        centerTitle: true,
-        titleSpacing: 2.0,
-        automaticallyImplyLeading: false,
-      ),
-      body: DoubleBackToCloseApp(
-        snackBar: const SnackBar(
-          content: Text('Tap back again to exit'),
+
+    return WillPopScope(
+      onWillPop: () async {
+        final now = DateTime.now();
+        if (_lastPressed == null || now.difference(_lastPressed!) > Duration(seconds: 2)) {
+          _lastPressed = now;
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Tap back again to go to StartPage')),
+          );
+          return false;
+        }
+        Get.offAll(() => StartPage()); 
+        return false;
+      },
+      child: Scaffold(
+        appBar: CustomAppBar(
+          title: "Faculty Home",
+          titleColor: AppColors.white,
+          backgroundColor: AppColors.faculty_primary,
+          centerTitle: true,
+          titleSpacing: 2.0,
+          automaticallyImplyLeading: false,
         ),
-        child: Padding(
+        body: Padding(
           padding: EdgeInsets.all(16.0.w),
           child: Column(
             children: [
               const SizedBox(height: 20),
-              // Use Obx to react to menuData changes
               Obx(() => Expanded(
                 child: GridView.builder(
                   shrinkWrap: true,
@@ -54,7 +70,7 @@ class FacultyHomeScreen extends StatelessWidget {
                       child: MenuCell(
                         choice: controller.menuData[index],
                         iconColor: AppColors.faculty_primary,
-                        ),
+                      ),
                     );
                   },
                 ),

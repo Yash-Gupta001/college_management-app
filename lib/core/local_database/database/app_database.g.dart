@@ -88,6 +88,8 @@ class _$AppDatabase extends AppDatabase {
 
   BranchDao? _branchdaoInstance;
 
+  Examtimetabledao? _examtimetabledaoInstance;
+
   Future<sqflite.Database> open(
     String path,
     List<Migration> migrations, [
@@ -125,6 +127,8 @@ class _$AppDatabase extends AppDatabase {
             'CREATE TABLE IF NOT EXISTS `event_entity` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `title` TEXT NOT NULL, `date` INTEGER NOT NULL, `type` TEXT NOT NULL, `description` TEXT)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `branch_entity` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL)');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `examtimetable_entity` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `title` TEXT NOT NULL, `date` TEXT NOT NULL, `type` TEXT NOT NULL, `description` TEXT, `subjectName` TEXT, `branchId` INTEGER)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -172,6 +176,12 @@ class _$AppDatabase extends AppDatabase {
   @override
   BranchDao get branchdao {
     return _branchdaoInstance ??= _$BranchDao(database, changeListener);
+  }
+
+  @override
+  Examtimetabledao get examtimetabledao {
+    return _examtimetabledaoInstance ??=
+        _$Examtimetabledao(database, changeListener);
   }
 }
 
@@ -265,7 +275,7 @@ class _$StudentDao extends StudentDao {
   @override
   Future<StudentEntity?> findStudentByUsername(String username) async {
     return _queryAdapter.query(
-        'SELECT * FROM student_entity WHERE username = ?1',
+        'SELECT * FROM student_entity WHERE LOWER(username) = LOWER(?1)',
         mapper: (Map<String, Object?> row) => StudentEntity(
             rollNo: row['rollNo'] as int?,
             username: row['username'] as String,
@@ -881,6 +891,125 @@ class _$BranchDao extends BranchDao {
   Future<void> insertBranch(BranchEntity branch) async {
     await _branchEntityInsertionAdapter.insert(
         branch, OnConflictStrategy.replace);
+  }
+}
+
+class _$Examtimetabledao extends Examtimetabledao {
+  _$Examtimetabledao(
+    this.database,
+    this.changeListener,
+  )   : _queryAdapter = QueryAdapter(database),
+        _examtimetableEntityInsertionAdapter = InsertionAdapter(
+            database,
+            'examtimetable_entity',
+            (ExamtimetableEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'title': item.title,
+                  'date': item.date,
+                  'type': item.type,
+                  'description': item.description,
+                  'subjectName': item.subjectName,
+                  'branchId': item.branchId
+                }),
+        _examtimetableEntityUpdateAdapter = UpdateAdapter(
+            database,
+            'examtimetable_entity',
+            ['id'],
+            (ExamtimetableEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'title': item.title,
+                  'date': item.date,
+                  'type': item.type,
+                  'description': item.description,
+                  'subjectName': item.subjectName,
+                  'branchId': item.branchId
+                }),
+        _examtimetableEntityDeletionAdapter = DeletionAdapter(
+            database,
+            'examtimetable_entity',
+            ['id'],
+            (ExamtimetableEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'title': item.title,
+                  'date': item.date,
+                  'type': item.type,
+                  'description': item.description,
+                  'subjectName': item.subjectName,
+                  'branchId': item.branchId
+                });
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<ExamtimetableEntity>
+      _examtimetableEntityInsertionAdapter;
+
+  final UpdateAdapter<ExamtimetableEntity> _examtimetableEntityUpdateAdapter;
+
+  final DeletionAdapter<ExamtimetableEntity>
+      _examtimetableEntityDeletionAdapter;
+
+  @override
+  Future<List<ExamtimetableEntity>> getAllExamtimetables() async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM examtimetable_entity ORDER BY date ASC',
+        mapper: (Map<String, Object?> row) => ExamtimetableEntity(
+            id: row['id'] as int?,
+            title: row['title'] as String,
+            date: row['date'] as String,
+            type: row['type'] as String,
+            description: row['description'] as String?,
+            subjectName: row['subjectName'] as String?,
+            branchId: row['branchId'] as int?));
+  }
+
+  @override
+  Future<List<ExamtimetableEntity>> getExamtimetablesInRange(
+    DateTime start,
+    DateTime end,
+  ) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM examtimetable_entity WHERE date BETWEEN ?1 AND ?2 ORDER BY date ASC',
+        mapper: (Map<String, Object?> row) => ExamtimetableEntity(id: row['id'] as int?, title: row['title'] as String, date: row['date'] as String, type: row['type'] as String, description: row['description'] as String?, subjectName: row['subjectName'] as String?, branchId: row['branchId'] as int?),
+        arguments: [
+          _dateTimeConverter.encode(start),
+          _dateTimeConverter.encode(end)
+        ]);
+  }
+
+  @override
+  Future<List<ExamtimetableEntity>> getExamtimetablesByType(String type) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM examtimetable_entity WHERE type = ?1 ORDER BY date ASC',
+        mapper: (Map<String, Object?> row) => ExamtimetableEntity(
+            id: row['id'] as int?,
+            title: row['title'] as String,
+            date: row['date'] as String,
+            type: row['type'] as String,
+            description: row['description'] as String?,
+            subjectName: row['subjectName'] as String?,
+            branchId: row['branchId'] as int?),
+        arguments: [type]);
+  }
+
+  @override
+  Future<void> insertExamtimetable(ExamtimetableEntity examtimetable) async {
+    await _examtimetableEntityInsertionAdapter.insert(
+        examtimetable, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> updateExamtimetable(ExamtimetableEntity examtimetable) async {
+    await _examtimetableEntityUpdateAdapter.update(
+        examtimetable, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> deleteExamtimetable(ExamtimetableEntity examtimetable) async {
+    await _examtimetableEntityDeletionAdapter.delete(examtimetable);
   }
 }
 

@@ -2,12 +2,14 @@ import 'dart:async';
 import 'package:floor/floor.dart';
 import 'package:flutter_flavors/core/local_database/dao/branchdao.dart';
 import 'package:flutter_flavors/core/local_database/dao/eventdao.dart';
+import 'package:flutter_flavors/core/local_database/dao/examtimetabledao.dart';
 import 'package:flutter_flavors/core/local_database/dao/facultysubject_dao.dart';
 import 'package:flutter_flavors/core/local_database/dao/studentsubject_dao.dart';
 import 'package:flutter_flavors/core/local_database/dao/subjectdao.dart';
 import 'package:flutter_flavors/core/local_database/entity/admin_entity.dart';
 import 'package:flutter_flavors/core/local_database/entity/branch_entity.dart';
 import 'package:flutter_flavors/core/local_database/entity/event_entity.dart';
+import 'package:flutter_flavors/core/local_database/entity/examtimetable_entity.dart';
 import 'package:flutter_flavors/core/local_database/entity/faculty_entity.dart';
 import 'package:flutter_flavors/core/local_database/entity/facultysubject_entity.dart';
 import 'package:flutter_flavors/core/local_database/entity/student_entity.dart';
@@ -32,7 +34,8 @@ part 'app_database.g.dart';
     StudentSubjectEntity,
     FacultySubjectEntity,
     EventEntity,
-    BranchEntity
+    BranchEntity,
+    ExamtimetableEntity
   ],
   version: 1,
 )
@@ -45,6 +48,7 @@ abstract class AppDatabase extends FloorDatabase {
   AdminDao get admindao;
   EventDao get eventDao;
   BranchDao get branchdao;
+  Examtimetabledao get examtimetabledao;
 }
 
  

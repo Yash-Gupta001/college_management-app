@@ -13,7 +13,7 @@ class GetAllStudentsBinding extends Bindings {
     Get.lazyPut<StudentDao>(() => database.studentDao);
 
     // Lazy load GetallStudentsController and pass studentDao as a dependency
-    Get.lazyPut<GetallStudentsController>(() => GetallStudentsController(database.studentDao,database.branchdao));
+    Get.lazyPut<GetallStudentsController>(() => GetallStudentsController(database.studentDao,database.branchdao,database.subjectDao));
 
 
   

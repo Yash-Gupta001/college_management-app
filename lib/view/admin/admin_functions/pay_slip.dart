@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_flavors/app/utils/color.dart';
 import 'package:flutter_flavors/controller/admin/get_all_faculty/getallfaculty_controller.dart';
+import 'package:flutter_flavors/core/services/payment/payment_service.dart';
 import 'package:flutter_flavors/widgets/custom_appbar.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get.dart';
@@ -38,6 +39,7 @@ class PaySlip extends StatelessWidget {
                     onPressed: (context) {
                       // await controller.facultyDao.deleteFaculty(teacher);
                       // controller.teachers.remove(teacher);
+                      Get.to(StripePaymentScreen());
                     },
                     backgroundColor: AppColors.green,
                     foregroundColor: AppColors.white,

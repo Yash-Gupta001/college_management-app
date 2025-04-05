@@ -3,9 +3,9 @@ import 'package:flutter_flavors/core/local_database/dao/studentdao.dart';
 import 'package:flutter_flavors/view/student/studenthomescreen.dart';
 import 'package:get/get.dart';
 
-class StudentloginController extends GetxController{
+class StudentloginController extends GetxController {
   final StudentDao studentDao = Get.find();
-  
+
   var insert_username = ''.obs;
   var insert_password = ''.obs;
   var isLoading = false.obs;
@@ -13,19 +13,20 @@ class StudentloginController extends GetxController{
   Future<void> validate() async {
     try {
       isLoading(true);
-      
-      // Check if fields are empty
+
       if (insert_username.isEmpty || insert_password.isEmpty) {
         throw Exception('Please enter both username and password');
       }
 
-      // Check credentials against database
-      final faculty = await studentDao.findStudentByUsernameAndPassword(
+      final student = await studentDao.findStudentByUsernameAndPassword(
         insert_username.value,
         insert_password.value,
       );
 
-      if (faculty != null) {
+      if (student != null) {
+        // Store username globally
+        Get.put<String>(student.username, tag: 'currentStudentUsername');
+
         Get.to(
           () => StudentHomeScreen(),
           binding: StudentScreenBinding(),
@@ -40,15 +41,9 @@ class StudentloginController extends GetxController{
         "Error",
         e.toString(),
         snackPosition: SnackPosition.BOTTOM,
-        duration: const Duration(seconds: 2),
       );
     } finally {
       isLoading(false);
     }
-  }
-
-  void clearFields() {
-    insert_username.value = "";
-    insert_password.value = "";
   }
 }
