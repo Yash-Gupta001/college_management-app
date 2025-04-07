@@ -90,6 +90,8 @@ class _$AppDatabase extends AppDatabase {
 
   Examtimetabledao? _examtimetabledaoInstance;
 
+  CalendarEventDao? _calendarEventDaoInstance;
+
   Future<sqflite.Database> open(
     String path,
     List<Migration> migrations, [
@@ -129,6 +131,8 @@ class _$AppDatabase extends AppDatabase {
             'CREATE TABLE IF NOT EXISTS `branch_entity` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `examtimetable_entity` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `title` TEXT NOT NULL, `date` TEXT NOT NULL, `type` TEXT NOT NULL, `description` TEXT, `subjectName` TEXT, `branchId` INTEGER)');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `calendarevents_entity` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `title` TEXT NOT NULL, `date` INTEGER NOT NULL, `type` TEXT NOT NULL, `description` TEXT, `color` INTEGER NOT NULL)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -182,6 +186,12 @@ class _$AppDatabase extends AppDatabase {
   Examtimetabledao get examtimetabledao {
     return _examtimetabledaoInstance ??=
         _$Examtimetabledao(database, changeListener);
+  }
+
+  @override
+  CalendarEventDao get calendarEventDao {
+    return _calendarEventDaoInstance ??=
+        _$CalendarEventDao(database, changeListener);
   }
 }
 
@@ -1010,6 +1020,71 @@ class _$Examtimetabledao extends Examtimetabledao {
   @override
   Future<void> deleteExamtimetable(ExamtimetableEntity examtimetable) async {
     await _examtimetableEntityDeletionAdapter.delete(examtimetable);
+  }
+}
+
+class _$CalendarEventDao extends CalendarEventDao {
+  _$CalendarEventDao(
+    this.database,
+    this.changeListener,
+  )   : _queryAdapter = QueryAdapter(database),
+        _calendarEventEntityInsertionAdapter = InsertionAdapter(
+            database,
+            'calendarevents_entity',
+            (CalendarEventEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'title': item.title,
+                  'date': _dateTimeConverter.encode(item.date),
+                  'type': item.type,
+                  'description': item.description,
+                  'color': item.color
+                }),
+        _calendarEventEntityDeletionAdapter = DeletionAdapter(
+            database,
+            'calendarevents_entity',
+            ['id'],
+            (CalendarEventEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'title': item.title,
+                  'date': _dateTimeConverter.encode(item.date),
+                  'type': item.type,
+                  'description': item.description,
+                  'color': item.color
+                });
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<CalendarEventEntity>
+      _calendarEventEntityInsertionAdapter;
+
+  final DeletionAdapter<CalendarEventEntity>
+      _calendarEventEntityDeletionAdapter;
+
+  @override
+  Future<List<CalendarEventEntity>> findAllEvents() async {
+    return _queryAdapter.queryList('SELECT * FROM calendarevents_entity',
+        mapper: (Map<String, Object?> row) => CalendarEventEntity(
+            id: row['id'] as int?,
+            title: row['title'] as String,
+            date: _dateTimeConverter.decode(row['date'] as int),
+            type: row['type'] as String,
+            description: row['description'] as String?,
+            color: row['color'] as int));
+  }
+
+  @override
+  Future<void> insertEvent(CalendarEventEntity event) async {
+    await _calendarEventEntityInsertionAdapter.insert(
+        event, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> deleteEvent(CalendarEventEntity event) async {
+    await _calendarEventEntityDeletionAdapter.delete(event);
   }
 }
 

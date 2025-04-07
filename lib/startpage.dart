@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_flavors/app/utils/color.dart';
-import 'package:flutter_flavors/controller/admin/login/adminlogin_binding.dart';
-import 'package:flutter_flavors/controller/faculty/login/facultylogin_binding.dart';
-import 'package:flutter_flavors/controller/student/login/stuentlogin_binding.dart';
-import 'package:flutter_flavors/view/admin/admin_login/admin_login.dart';
-import 'package:flutter_flavors/view/faculty/faculty_login/faculty_login.dart';
-import 'package:flutter_flavors/view/student/student_login/student_login.dart';
+import 'package:flutter_flavors/ui/controller/admin/login/adminlogin_binding.dart';
+import 'package:flutter_flavors/ui/controller/faculty/login/facultylogin_binding.dart';
+import 'package:flutter_flavors/ui/controller/student/login/stuentlogin_binding.dart';
+import 'package:flutter_flavors/ui/view/admin/admin_login/admin_login.dart';
+import 'package:flutter_flavors/ui/view/faculty/faculty_login/faculty_login.dart';
+import 'package:flutter_flavors/ui/view/student/student_login/student_login.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 

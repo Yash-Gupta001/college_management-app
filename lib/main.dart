@@ -1,7 +1,7 @@
 import 'package:floor/floor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_flavors/core/local_database/database/app_database.dart';
-import 'package:flutter_flavors/view/app.dart';
+import 'package:flutter_flavors/ui/view/app.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:get/get.dart';
 
