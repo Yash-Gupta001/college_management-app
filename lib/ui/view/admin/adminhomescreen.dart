@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_flavors/app/utils/color.dart';
-import 'package:flutter_flavors/core/local_database/database/app_database.dart';
 import 'package:flutter_flavors/ui/controller/admin/add_faculty/addfaculty_binding.dart';
 import 'package:flutter_flavors/ui/controller/admin/adminscreen_binding.dart';
 import 'package:flutter_flavors/ui/controller/admin/adminscreen_controller.dart';

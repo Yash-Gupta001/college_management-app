@@ -9,7 +9,6 @@ This College Management App is developed using **Flutter** and **GetX** state ma
 - **Manage Faculty Salaries:** Admin can access and manage faculty salaries, ensuring smooth payroll management.
 - **Attendance Reports:** Admin can access overall attendance reports for all faculty and students.
 - **Approve Student Requests:** Admin can manage various student-related requests, such as fee payments or leave approvals.
-
 ### Faculty (Teacher) Panel
 - **Mark Attendance:** Faculty can mark the attendance for students for each subject.
 - **Apply Leave:** Teachers can apply for leave with a reason, and admins can approve or reject these requests.
