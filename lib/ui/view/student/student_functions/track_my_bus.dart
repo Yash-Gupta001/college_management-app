@@ -27,8 +27,12 @@ class TrackMyBus extends StatelessWidget {
               target: controller.initialPosition,
               zoom: 14.0,
             ),
-            onMapCreated: controller.onMapCreated,
+            onMapCreated: (GoogleMapController mapController) {
+              controller.onMapCreated(mapController);
+              controller.addPolylineFromUserToBus();
+            },
             markers: controller.markers,
+            polylines: controller.polylines,
             myLocationEnabled: true,
             myLocationButtonEnabled: true,
             compassEnabled: true,

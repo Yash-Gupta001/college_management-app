@@ -21,4 +21,7 @@ class AppColors {
   static const Color green = Color(0xFF4CAF50);
   static const Color blue = Color(0xFF2196F3);
   static const Color purple = Color(0xFF3C0061); 
+
+  // Google brand color
+  static const Color google_blue = Color(0xFF4285F4);
 }
